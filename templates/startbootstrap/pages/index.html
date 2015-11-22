@@ -250,7 +250,10 @@ Inicio
                             <!-- /input-group -->
                         </li>
                         <li>
-                            <a href="index.html"><i class="fa fa-dashboard fa-fw"></i> Dashboard</a>
+                            <a href="/"><i class="fa fa-home fa-fw"></i> Inicio</a>
+                        </li>
+                        <li>
+                            <a href="noticias/buscar"><i class="fa fa-hacker-news fa-fw"></i> Noticias</a>
                         </li>
                         <li>
                             <a href="#"><i class="fa fa-bar-chart-o fa-fw"></i> Charts<span class="fa arrow"></span></a>
@@ -352,6 +355,8 @@ Inicio
             </div>
             <!-- /.row -->
             {% block buscar_noticias %}
+            {% endblock %}
+            {% block noticia %}
             {% endblock %}
             <div class="row">
                 <div class="col-lg-3 col-md-6">
