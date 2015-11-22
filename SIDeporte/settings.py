@@ -110,4 +110,7 @@ STATICFILES_DIRS = (
     'static/',
 )
 
+MEDIA_ROOT = os.path.join(BASE_DIR, "imagenes")
+MEDIA_URL = '/imagenes/'
+
 LOGIN_REDIRECT_URL = '/'
