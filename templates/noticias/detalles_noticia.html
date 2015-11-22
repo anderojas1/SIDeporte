@@ -1,10 +1,19 @@
-{% extends "base.html" %}
+{% extends "startbootstrap/pages/index.html" %}
 {% block title %}
-    Noticias de Interés
+    Noticias | {{noticia.titulo}}
 {% endblock %}
 
-{% block content %}
-<div class="informacion">
-	<h2> {{noticia.titulo}}</h2>
-</div>
+{% block title_content %}
+{{noticia.titulo}}
+{% endblock %}
+
+{% block noticia %}
+	<div class="panel panel-default">
+		<div class="panel-body">
+			Fecha de publicación: {{noticia.fecha}}<br>
+			<hr>
+			<img src="../../{{ MEDIA_URL}}{{noticia.imagen}}" alt="{{noticia.titulo}}" width="1000px" /><br><br>
+			{{noticia.contenido}}<br>
+		</div>
+	</div>
 {% endblock %}
