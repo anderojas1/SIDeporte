@@ -17,3 +17,17 @@ class DetallesNoticia(TemplateView):
 			context['noticia'] = self.noticia
 
 		return context
+
+
+class BuscarNoticias(TemplateView):
+	template_name = 'noticias/buscar_noticias.html'
+	noticias = []
+
+	def get_context_data(self, **kwargs):
+		context = super(BuscarNoticias, self).get_context_data(**kwargs)
+
+		self.noticias = Noticias.objects.all()
+		context['noticias'] = self.noticias
+		print(context['noticias'][0].imagen.url)
+
+		return context
