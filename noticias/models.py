@@ -12,5 +12,9 @@ class Noticias (models.Model):
 	def __str__(self):
 		return self.titulo
 
+	@models.permalink
+	def get_absolute_url(self):
+		return ("detalles_noticia", [self.codigo])
+
 	class Meta:
-		verbose_name_plural = 'Noticias'
+		verbose_name_plural = "Noticias"
