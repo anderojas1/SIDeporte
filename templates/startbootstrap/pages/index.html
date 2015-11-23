@@ -222,10 +222,10 @@ Inicio
                         <li><a href="#"><i class="fa fa-gear fa-fw"></i> Settings</a>
                         </li>
                         <li class="divider"></li>
-                        <li><a href="logout"><i class="fa fa-sign-out fa-fw"></i> Logout</a>
+                        <li><a href="/logout"><i class="fa fa-sign-out fa-fw"></i> Logout</a>
                         </li>                        
                         {% else %}
-                        <li><a href="login"><i class="fa fa-user fa-sign-in fa-fw"></i> Login</a>
+                        <li><a href="/login"><i class="fa fa-user fa-sign-in fa-fw"></i> Login</a>
                         </li>
                         {% endif %}
                     </ul>
@@ -253,7 +253,18 @@ Inicio
                             <a href="/"><i class="fa fa-home fa-fw"></i> Inicio</a>
                         </li>
                         <li>
-                            <a href="noticias/buscar"><i class="fa fa-hacker-news fa-fw"></i> Noticias</a>
+                            <a href="/noticias/buscar"><i class="fa fa-hacker-news fa-fw"></i> Noticias 
+                                <span class="fa arrow">
+                                </span>
+                            </a>
+                            <ul class="nav nav-second-level">
+                                <li>
+                                    <a href="/noticias/registrar">Registrar noticia</a>
+                                </li>
+                                <li>
+                                    <a href="/noticias/buscar">Ver todas las noticias</a>
+                                </li>
+                            </ul>
                         </li>
                         <li>
                             <a href="#"><i class="fa fa-bar-chart-o fa-fw"></i> Charts<span class="fa arrow"></span></a>
