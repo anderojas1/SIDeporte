@@ -1,0 +1,61 @@
+{% extends "startbootstrap/pages/index.html" %}
+{% block title %}
+	Registrar Nueva Noticia
+{% endblock %}
+
+{% block title_content %}
+	Registrar Noticia
+{% endblock %}
+
+{% block noticia %}
+	{% if form %}
+	{{form.errors}}
+	<div class="panel panel-default">
+		<div class="panel-heading">
+			Registro			
+		</div>
+		<div class="panel-body">
+			<form role="form" enctype="multipart/form-data" method="POST">
+			{% csrf_token %}
+				<div class="form-group">
+					<label>
+						Título
+					</label>
+					{{form.titulo}}
+				</div>
+				<div class="form-group">
+					<label>
+						Contenido
+					</label>
+					{{form.contenido}}
+				</div>
+				<div class="form-group">
+					<label>
+						Asociar imagen
+					</label>
+					{{form.imagen}}
+				</div>
+				<button type="submit" class="btn btn-primary btn-lg btn-block">Enviar Noticia</button>
+			</form>
+		</div>
+	</div>
+	{% elif exito %}
+	<div class="panel panel-default">
+		<div class="panel-heading">
+			Registro			
+		</div>
+		<div class="panel-body">
+			{{exito}}
+		</div>
+	</div>
+	{% else %}
+	<div class="panel panel-default">
+		<div class="panel-heading">
+			Registro			
+		</div>
+		<div class="panel-body">
+			El formulario no pudo ser cargado. Por favor inténtelo más tarde
+		</div>
+	</div>
+	{% endif %}
+{% endblock %}
