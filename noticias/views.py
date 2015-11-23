@@ -47,7 +47,6 @@ class RegistrarNoticia(TemplateView):
 	def post(self, request, *args, **kwargs):
 		context = super(RegistrarNoticia, self).get_context_data(**kwargs)
 		self.form_registrar_noticia = FormRegistroNoticias(request.POST, request.FILES)
-		print(self.form_registrar_noticia)
 
 		if self.form_registrar_noticia.is_valid():
 			print('es válido')
@@ -60,3 +59,25 @@ class RegistrarNoticia(TemplateView):
 			context['form'] = self.form_registrar_noticia
 			return render(request, self.template_name, context)
 
+
+
+class BorrarNoticia(TemplateView):
+	template_name = 'noticias/borrar_noticia.html'
+
+	def get_context_data(self, **kwargs):
+		context = super(BorrarNoticia, self).get_context_data(**kwargs)
+
+		noticia = Noticias.objects.get(codigo=kwargs['id_noticias'])
+		context['noticia'] = noticia
+
+		return context
+
+	def post(self, request, *args, **kwargs):
+		context = super(BorrarNoticia, self).get_context_data(**kwargs)
+
+		noticia = Noticia.objects.get(codigo=kwargs['id_noticias'])
+		noticia.estado = False
+		noticia.save(update_fields=['estado'])
+		context['borra_noticia'] = 'Se ha borrado la noticia exitosamente'
+
+		return render(request, 'buscar_noticias', context)

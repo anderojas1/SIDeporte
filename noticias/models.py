@@ -40,8 +40,3 @@ class Noticias (models.Model):
 	class Meta:
 		verbose_name_plural = "Noticias"
 		ordering = ['fecha']
-
-class Entidad(models.Model):
-	nombre 	= models.CharField(max_length=30, primary_key=True)
-	tipo	= ((0, 'rector'), (1, 'Departe'), (2, 'Rural'), (3, 'Rural de Difícil Acceso'))
-	estado 	= models.BooleanField(default=True)
