@@ -5,12 +5,12 @@ from django.core.exceptions import ObjectDoesNotExist
 # Create your models here.
 
 class Noticias (models.Model):
-	codigo = models.CharField(max_length=20, primary_key=True)
-	titulo = models.CharField(max_length=100)
-	fecha = models.DateField(editable=False)
-	imagen = models.ImageField(upload_to='imagenes')
-	contenido = models.CharField(max_length=1000)
-
+	codigo 		= models.CharField(max_length=20, primary_key=True)
+	titulo 		= models.CharField(max_length=100)
+	fecha 		= models.DateField(editable=False)
+	imagen 		= models.ImageField(upload_to='imagenes')
+	contenido 	= models.CharField(max_length=1000)
+	estado 		= models.BooleanField(default=True)
 	def __str__(self):
 		return self.titulo
 
@@ -40,3 +40,8 @@ class Noticias (models.Model):
 	class Meta:
 		verbose_name_plural = "Noticias"
 		ordering = ['fecha']
+
+class Entidad(models.Model):
+	nombre 	= models.CharField(max_length=30, primary_key=True)
+	tipo	= ((0, 'rector'), (1, 'Departe'), (2, 'Rural'), (3, 'Rural de Difícil Acceso'))
+	estado 	= models.BooleanField(default=True)
