@@ -16,21 +16,22 @@ class Noticias (models.Model):
 
 
 	def save(self, *args, **kwargs):
-		fecha = timezone.now().date()
-		try:
-			consecutivo = str(len(Noticias.objects.filter(fecha=fecha)))
-			codigo = str(fecha) + consecutivo
-			codigo = codigo.replace('-', '')
-		except ObjectDoesNotExist:
-			codigo = str(fecha) + "0"
-			codigo = codigo.replace('-', '')
-		print(codigo)
-		self.fecha = fecha
-		self.codigo = codigo
+		if len(kwargs) == 0:
+			fecha = timezone.now().date()
+			try:
+				consecutivo = str(len(Noticias.objects.filter(fecha=fecha)))
+				codigo = str(fecha) + consecutivo
+				codigo = codigo.replace('-', '')
+			except ObjectDoesNotExist:
+				codigo = str(fecha) + "0"
+				codigo = codigo.replace('-', '')
+			print(codigo)
+			self.fecha = fecha
+			self.codigo = codigo
 
-		print('aqui estoy')
-
-		return super(Noticias, self).save(*args, **kwargs)
+			return super(Noticias, self).save(*args, **kwargs)
+		else:
+			return super(Noticias, self).save(*args, **kwargs)
 
 
 	@models.permalink
