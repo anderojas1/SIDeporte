@@ -7,15 +7,24 @@ Noticias Destacadas
 {% endblock %}
 {% block buscar_noticias %}
 	
-	<div class="panel panel-default">
+	<div class="panel panel-primary">
 		<div class="panel-heading">
 			<i class="fa fa-hacker-news fa-fw"> </i>
 			Sección de Noticias
 		</div>
 		<div class="panel-body">
 			{% for noticia in noticias %}
-				<h2><a href="{{noticia.get_absolute_url}}">{{noticia.titulo}}</a></h2><br>				
-				<img src="../{{ MEDIA_URL}}{{noticia.imagen}}" alt="{{noticia.titulo}}" width="1000px" />
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<i class="fa fa-angle-double-right fa-fw"></i>
+					<a href="{{noticia.get_absolute_url}}">{{noticia.titulo}}</a>
+				</div>
+				<div class="panel-body">
+					<br>
+					<img src="../imagenes/{{ MEDIA_URL}}{{noticia.imagen}}" alt="{{noticia.titulo}}" width="980px" />
+					<br>
+				</div>
+			</div>
 			{% endfor %}
 		</div>
 	</div>
