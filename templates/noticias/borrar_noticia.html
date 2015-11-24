@@ -9,5 +9,17 @@ Borrar Noticia
 {% endblock %}
 
 {% block noticia %}
-	{{noticia.titulo}}
+	<div class="panel panel-danger">
+		<div class="panel-heading">
+			<i class="fa fa-hacker-news fa-fw"> </i>
+			Borrar {{noticia.titulo}}
+		</div>
+		<div class="panel-body">
+			<form action="" method="post">
+			{% csrf_token %}
+    			<p>¿Realmente desea eliminar la noticia {{noticia.titulo}}?</p>
+    			<button class= "btn btn-danger" type="submit">Sí, eliminar</button>
+			</form>
+		</div>
+	</div>
 {% endblock %}

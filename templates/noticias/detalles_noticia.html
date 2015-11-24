@@ -13,7 +13,8 @@
 			Fecha de publicación: {{noticia.fecha}}<br>
 			<hr>
 			<img src="../../imagenes/{{ MEDIA_URL}}{{noticia.imagen}}" alt="{{noticia.titulo}}" width="1000px" /><br><br>
-			{{noticia.contenido}}<br>
+			{{noticia.contenido}}<br><br>
+			<a href="delete"><button class="btn btn-danger">Eliminar</button></a>
 		</div>
 	</div>
 {% endblock %}

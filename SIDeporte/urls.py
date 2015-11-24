@@ -15,7 +15,8 @@ Including another URLconf
 """
 from django.conf.urls import include, url
 from django.contrib import admin
-import noticias.urls
+import noticias.urls 
+import Coldeportes.urls
 from .views import Index
 from SIDeporte import settings
 
@@ -23,6 +24,7 @@ urlpatterns = [
 	url(r'^$', Index.as_view(), name='index'),
     url(r'^admin/', include(admin.site.urls)),
     url(r'^noticias/', include(noticias.urls)),
+    url(r'^contriboldeportes/', include(Coldeportes.urls)),
     url(r'^login/$', 'django.contrib.auth.views.login',
         {'template_name': 'startbootstrap/pages/login.html'}, name='login'),
     url(r'^logout/$', 'django.contrib.auth.views.logout', {'next_page': 'login'}),

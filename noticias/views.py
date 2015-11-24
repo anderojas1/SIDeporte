@@ -28,7 +28,7 @@ class BuscarNoticias(TemplateView):
 	def get_context_data(self, **kwargs):
 		context = super(BuscarNoticias, self).get_context_data(**kwargs)
 
-		self.noticias = Noticias.objects.all()
+		self.noticias = Noticias.objects.filter(estado=True)
 		context['noticias'] = self.noticias
 
 		return context
@@ -75,9 +75,9 @@ class BorrarNoticia(TemplateView):
 	def post(self, request, *args, **kwargs):
 		context = super(BorrarNoticia, self).get_context_data(**kwargs)
 
-		noticia = Noticia.objects.get(codigo=kwargs['id_noticias'])
+		noticia = Noticias.objects.get(codigo=kwargs['id_noticias'])
 		noticia.estado = False
 		noticia.save(update_fields=['estado'])
 		context['borra_noticia'] = 'Se ha borrado la noticia exitosamente'
 
-		return render(request, 'buscar_noticias', context)
+		return render(request, 'noticias/buscar_noticias.html', context)
