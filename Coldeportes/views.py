@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.views.generic import TemplateView
 
 from .models import Entidad
+from .forms import FormRegistroEntidad
 
 class DetallesEntidad(TemplateView):
 	template_name = 'Entidades/detalles_entidad.html'
@@ -10,7 +11,7 @@ class DetallesEntidad(TemplateView):
 	def get_context_data(self, **kwargs):
 		context = super(DetallesEntidad, self).get_context_data(**kwargs)
 		
-		self.entidad = Entidad.objects.get(pk=self.kwargs['id_entidad'])
+		self.entidad = Entidad.objects.get(codigo = kwargs['id_entidad'])
 		if 'entidad' not in context:
 			context['entidad'] = self.entidad
 
@@ -19,7 +20,7 @@ class DetallesEntidad(TemplateView):
 
 class RegistrarEntidad(TemplateView):
 	template_name = 'Entidades/registrar_entidad.html'
-	form_registrar_noticia = FormRegistroNoticias()
+	form_registrar_noticia = FormRegistroEntidad()
 
 	def get_context_data(self, **kwargs):
 		context = super(RegistrarNoticia, self).get_context_data(**kwargs)

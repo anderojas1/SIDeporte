@@ -80,7 +80,7 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'proyecto_www',
-        'USER': 'anderojas',
+        'USER': 'univalle',
         'PASSWORD': 'univalle',
         'HOST': 'localhost',
         'PORT': '5432',

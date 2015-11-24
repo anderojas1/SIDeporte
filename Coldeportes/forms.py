@@ -1,13 +1,13 @@
 from django.forms import ModelForm
 from django import forms
-from .models import Entidad
+from .models import Entidad, Ubicacion
 
 
 class FormRegistroEntidad (ModelForm):
 
 	class Meta:
-		model = Noticias
-		fields = ['nombre', 'tipo', 'estado', 'caracter_economico', 'dedicacion', 'departamento', 'municipio', 'direccion',
+		model = Entidad
+		fields = ['nombre', 'tipo', 'estado', 'caracter_economico', 'dedicacion',
 				  'telefono', 'cc_representante_legal', 'nombre_representante_legal' ]
 
 		widgets = {
@@ -16,6 +16,25 @@ class FormRegistroEntidad (ModelForm):
 				'placeholder': 'Nombre',
 				'type': 'text'
 				}),
+			'cc_representante_legal': forms.TextInput(attrs={
+				'class': 'form-control',
+				'placeholder': 'Cedula Ciudadania',
+				'type': 'text'
+				}),
+			'nombre_representante_legal': forms.TextInput(attrs={
+				'class': 'form-control',
+				'placeholder': 'Nombre Completo',
+				'type': 'text'
+				}),
+		}
+
+class FormRegistroEntidad (ModelForm):
+
+	class Meta:
+		model = Ubicacion
+		fields = ['departamento', 'municipio', 'direccion' ]
+
+		widgets = {
 			'departamento': forms.TextInput(attrs={
 				'class': 'form-control',
 				'placeholder': 'Departamento',
@@ -29,16 +48,6 @@ class FormRegistroEntidad (ModelForm):
 			'direccion': forms.TextInput(attrs={
 				'class': 'form-control',
 				'placeholder': 'Direccion ',
-				'type': 'text'
-				}),
-			'cc_representante_legal': forms.TextInput(attrs={
-				'class': 'form-control',
-				'placeholder': 'Cedula Ciudadania',
-				'type': 'text'
-				}),
-			'nombre_representante_legal': forms.TextInput(attrs={
-				'class': 'form-control',
-				'placeholder': 'Nombre Completo',
 				'type': 'text'
 				}),
 		}
