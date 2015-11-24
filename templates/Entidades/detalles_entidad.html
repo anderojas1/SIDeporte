@@ -1,0 +1,19 @@
+{% extends "startbootstrap/pages/index.html" %}
+{% block title %}
+    Entidades | {{entidad.codigo}}
+{% endblock %}
+
+{% block title_content %}
+{{noticia.nombre}}
+{% endblock %}
+
+{% block noticia %}
+	<div class="panel panel-default">
+		<div class="panel-body">
+			{{entidad.tipo}}
+			{{entidad.estado}}
+			{{entidad.caracter_economico}}
+			{{entidad.dedicacion}}
+		</div>
+	</div>
+{% endblock %}

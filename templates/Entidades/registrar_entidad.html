@@ -1,0 +1,59 @@
+{% extends "startbootstrap/pages/index.html" %}
+{% block title %}
+	Registrar Nueva Entidad
+{% endblock %}
+
+{% block title_content %}
+	Registrar Entidad
+{% endblock %}
+
+{% block noticia %}
+	{% if form %}
+	{{form.errors}}
+	<div class="panel panel-default">
+		<div class="panel-heading">
+			Registro Entidades 		
+		</div>
+		<div class="panel-body">
+			<form role="form" enctype="multipart/form-data" method="POST">
+			{% csrf_token %}
+				<div class="form-group">
+					<label>
+						Nombre
+					</label>
+					{{form.nombre}}
+				</div>
+				<div class="form-group">
+					<div class="dropdown">
+	  					<button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Tipo
+						<span class="caret"></span></button>
+	 					<ul class="dropdown-menu">
+	   						 {{form.tipo}}
+						</ul>
+					</div>
+				</div>
+				
+				<button type="submit" class="btn btn-primary btn-lg btn-block">Enviar Noticia</button>
+			</form>
+		</div>
+	</div>
+	{% elif exito %}
+	<div class="panel panel-default">
+		<div class="panel-heading">
+			Registro			
+		</div>
+		<div class="panel-body">
+			{{exito}}
+		</div>
+	</div>
+	{% else %}
+	<div class="panel panel-default">
+		<div class="panel-heading">
+			Registro			
+		</div>
+		<div class="panel-body">
+			El formulario no pudo ser cargado. Por favor inténtelo más tarde
+		</div>
+	</div>
+	{% endif %}
+{% endblock %}
