@@ -1,26 +1,33 @@
 {% extends "startbootstrap/pages/index.html" %}
+
 {% block title %}
-	Registrar Nueva Noticia
+Editar Noticia {{id_noticias}}
 {% endblock %}
 
 {% block title_content %}
-	Registrar Noticia
+Editar Noticia
 {% endblock %}
-
 {% block noticia %}
-	{% if form %}
 	<div class="panel panel-default">
 		<div class="panel-heading">
-			Registro			
+			<i class="fa fa-hacker-news fa-fw"> </i>
+			Noticia {{noticia.titulo}}
 		</div>
 		<div class="panel-body">
 			<form role="form" enctype="multipart/form-data" method="POST">
 			{% csrf_token %}
 				<div class="form-group">
+					<label for="disabledSelect">
+						Código
+					</label>
+					<input class="form-control" id="disabledInput" placeholder="{{noticia.codigo}}" disabled="" type="text">
+					</input>
+				</div>
+				<div class="form-group">
 					<label>
 						Título
 					</label>
-					{{form.titulo}}
+					<input class="form-control" id="id_titulo" maxlength="100" name="titulo" type="text" value="{{noticia.titulo}}">
 				</div>
 				<div class="form-group">
 					<label>
@@ -38,23 +45,4 @@
 			</form>
 		</div>
 	</div>
-	{% elif exito %}
-	<div class="panel panel-default">
-		<div class="panel-heading">
-			Registro			
-		</div>
-		<div class="panel-body">
-			{{exito}}
-		</div>
-	</div>
-	{% else %}
-	<div class="panel panel-default">
-		<div class="panel-heading">
-			Registro			
-		</div>
-		<div class="panel-body">
-			El formulario no pudo ser cargado. Por favor inténtelo más tarde
-		</div>
-	</div>
-	{% endif %}
 {% endblock %}

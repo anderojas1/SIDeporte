@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from django.views.generic import TemplateView
+from django.views.generic.edit import DeleteView, UpdateView
 
 from .models import Noticias
 from .forms import FormRegistroNoticias
@@ -81,3 +82,20 @@ class BorrarNoticia(TemplateView):
 		context['borra_noticia'] = 'Se ha borrado la noticia exitosamente'
 
 		return render(request, 'noticias/buscar_noticias.html', context)
+
+class EditarNoticia (TemplateView):
+	template_name = 'noticias/editar_noticias.html'
+	form = FormRegistroNoticias()
+
+	def get_context_data(self, **kwargs):
+		context = super(EditarNoticia, self).get_context_data(**kwargs)
+		context['form'] = self.form
+		noticia = Noticias.objects.get(codigo=kwargs['id_noticias'])
+		context['noticia'] = noticia
+
+		return context
+
+	def post(self, request, *args, **kwargs):
+		context = super(EditarNoticia, self).get_context_data(**kwargs)
+
+		return render(request, self.template_name, context)
