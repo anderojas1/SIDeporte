@@ -20,7 +20,8 @@ class Entidad(models.Model):
 	opt_tipo					= ((0, 'rector'), (1, 'Departamento'), (2, 'municipal o distrital'), (3, 'club'),(4, 'escuela'),(5, 'instituto'))
 	tipo 						= models.SmallIntegerField(choices=opt_tipo)
 	estado 						= models.BooleanField(default=True)
-	caracter_economico 			= ((1,'privada'),(2,'publica'),(3,'mixta'))
+	opt_caracter_economico 		= ((1,'privada'),(2,'publica'),(3,'mixta'))
+	caracter_economico 			= models.SmallIntegerField(choices=opt_caracter_economico)
 	opt_dedicacion				= ((1,'deporte'),(2,'recreacion'),(3,'aprovechamiento tiempo libre'),(4,'educacion extraescolar'),(5,'educacion fisica'))
 	dedicacion 					= models.SmallIntegerField(choices=opt_dedicacion)
 	ubicacion 					= models.ForeignKey(Ubicacion)
@@ -45,18 +46,23 @@ class Escenarios(models.Model):
 		return self.nombre
 
 class Deportistas(models.Model):
-	nombre 				= models.CharField(max_length=30)
-	doc_identidad 		= models.BigIntegerField(primary_key=True)
-	fecha_nacim			= models.DateField()
-	lugar_nacim			= models.CharField(max_length=20)
-	deporte				= models.CharField(max_length=20)
-	categoria			= models.CharField(max_length=10)
-	ranking_nacional	= models.CharField(max_length=10)
-	ranking_nacional	= models.CharField(max_length=10)
-	asociado_a			= models.CharField(max_length=10)
-	opt_tipo_asociado	= ((0, 'jugador con pase'), (1, 'jugador asociado'))
-	tipo_asociado 		= models.SmallIntegerField(choices=opt_tipo_asociado)
-	reconocimiento		= models.CharField(max_length=60)
+	nombre 					= models.CharField(max_length=30)
+	doc_identidad 			= models.BigIntegerField(primary_key=True)
+	fecha_nacim				= models.DateField()
+	lugar_nacim				= models.CharField(max_length=20)
+	deporte					= models.CharField(max_length=20)
+	estado 					= models.BooleanField(default=True)
+	categoria				= models.CharField(max_length=10)
+	ranking_nacional		= models.CharField(max_length=10)
+	ranking_internacional	= models.CharField(max_length=10)
+	asociado_a				= models.CharField(max_length=10)
+	opt_tipo_asociado		= ((0, 'jugador con pase'), (1, 'jugador asociado con mensualidad'),(2,'jugador asociado con anualidad'))
+	tipo_asociado 			= models.SmallIntegerField(choices=opt_tipo_asociado)
+	reconocimiento			= models.CharField(max_length=60)
 
 	def __str__(self):
 		return self.nombre
+
+	@models.permalink
+	def get_absolute_url(self):
+		return ("detalles_deportistas", [self.doc_identidad])
