@@ -1,9 +1,9 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect, render_to_response
 from django.views.generic import TemplateView
 from django.views.generic.edit import DeleteView, UpdateView
 
 from .models import Noticias
-from .forms import FormRegistroNoticias
+from .forms import FormRegistroNoticias, FormEdicionNoticias
 # Create your views here.
 
 
@@ -13,13 +13,18 @@ class DetallesNoticia(TemplateView):
 
 	def get_context_data(self, **kwargs):
 		context = super(DetallesNoticia, self).get_context_data(**kwargs)
-		print(kwargs['id_noticias'])
 
 		self.noticia = Noticias.objects.get(pk=self.kwargs['id_noticias'])
 		if 'noticia' not in context:
 			context['noticia'] = self.noticia
 
 		return context
+
+	"""def post(self, request, *args, **kwargs):
+		context = super(DetallesNoticia, self).get_context_data(**kwargs)
+
+		
+		return redirect("update", "algo")"""
 
 
 class BuscarNoticias(TemplateView):
@@ -84,12 +89,14 @@ class BorrarNoticia(TemplateView):
 		return render(request, 'noticias/buscar_noticias.html', context)
 
 class EditarNoticia (TemplateView):
+	model = Noticias
 	template_name = 'noticias/editar_noticias.html'
-	form = FormRegistroNoticias()
+	fields = ['titulo', 'contenido']
 
 	def get_context_data(self, **kwargs):
 		context = super(EditarNoticia, self).get_context_data(**kwargs)
-		context['form'] = self.form
+		#context['form'] = self.form
+		#print(kwargs)
 		noticia = Noticias.objects.get(codigo=kwargs['id_noticias'])
 		context['noticia'] = noticia
 
@@ -97,5 +104,23 @@ class EditarNoticia (TemplateView):
 
 	def post(self, request, *args, **kwargs):
 		context = super(EditarNoticia, self).get_context_data(**kwargs)
+		noticia = Noticias.objects.get(codigo=kwargs['id_noticias'])
+		if 'noticia' not in context:
+			context['noticia'] = noticia
 
+		form = FormEdicionNoticias(request.POST, request.FILES)
+
+		if form.is_valid():
+			if (form.cleaned_data['imagen'] is not None):
+				imagen = form.cleaned_data['imagen']	
+				noticia.imagen = imagen
+				noticia.save(update_fields=['imagen'])
+			titulo = form.cleaned_data['titulo']
+			contenido = form.cleaned_data['contenido']
+			noticia.titulo = titulo
+			noticia.contenido = contenido
+			noticia.save(update_fields=['titulo'])
+			noticia.save(update_fields=['contenido'])
+		else:
+			print(self.form.errors)
 		return render(request, self.template_name, context)
