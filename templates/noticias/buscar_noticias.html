@@ -19,11 +19,6 @@ Noticias Destacadas
 					<i class="fa fa-angle-double-right fa-fw"></i>
 					<a href="{{noticia.get_absolute_url}}">{{noticia.titulo}}</a>
 				</div>
-				<div class="panel-body">
-					<br>
-					<img src="../imagenes/{{ MEDIA_URL}}{{noticia.imagen}}" alt="{{noticia.titulo}}" width="980px" />
-					<br>
-				</div>
 			</div>
 			{% endfor %}
 		</div>

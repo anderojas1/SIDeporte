@@ -123,4 +123,4 @@ class EditarNoticia (TemplateView):
 			noticia.save(update_fields=['contenido'])
 		else:
 			print(self.form.errors)
-		return render(request, self.template_name, context)
+		return render(request, "noticias/detalles_noticia.html", context)
