@@ -14,16 +14,40 @@ class Ubicacion(models.Model):
 	def __int__(self):
 		return self.codigo
 
+class Dedicacion(models.Model):
+	id = models.AutoField(primary_key=True)
+	opt_dedicacion				= ((1,'deporte'),(2,'recreacion'),(3,'aprovechamiento tiempo libre'),(4,'educacion extraescolar'),(5,'educacion fisica'))
+	dedicacion 					= models.SmallIntegerField(choices=opt_dedicacion)
+
+	def __str__(self):
+		
+		if self.dedicacion == 1:  
+			return str('deporte')
+			
+		if self.dedicacion == 2:
+			return str('recreacion')
+
+		if self.dedicacion == 3:
+			return str('aprovechamiento tiempo libre')
+
+		if self.dedicacion == 4:
+			return str('educacion extraescolar')
+
+		if self.dedicacion == 5:
+			return str('educacion fisica')
+
+
+		
+
 class Entidad(models.Model):
 	codigo 						= models.CharField(max_length=30, primary_key=True)
 	nombre 						= models.CharField(max_length=30)
 	opt_tipo					= ((0, 'rector'), (1, 'Departamento'), (2, 'municipal o distrital'), (3, 'club'),(4, 'escuela'),(5, 'instituto'))
 	tipo 						= models.SmallIntegerField(choices=opt_tipo)
 	estado 						= models.BooleanField(default=True)
+	dedicacion 					= models.ManyToManyField(Dedicacion)
 	opt_caracter_economico 		= ((1,'privada'),(2,'publica'),(3,'mixta'))
 	caracter_economico 			= models.SmallIntegerField(choices=opt_caracter_economico)
-	opt_dedicacion				= ((1,'deporte'),(2,'recreacion'),(3,'aprovechamiento tiempo libre'),(4,'educacion extraescolar'),(5,'educacion fisica'))
-	dedicacion 					= models.SmallIntegerField(choices=opt_dedicacion)
 	ubicacion 					= models.ForeignKey(Ubicacion)
 	telefono					= models.BigIntegerField()
 	cc_representante_legal		= models.BigIntegerField()
@@ -31,7 +55,6 @@ class Entidad(models.Model):
 
 	def __str__(self):
 		return self.nombre
-
 
 class Escenarios(models.Model):
 	codigo 					= models.CharField(max_length=30, primary_key=True)
