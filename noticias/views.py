@@ -4,6 +4,7 @@ from django.views.generic.edit import DeleteView, UpdateView
 
 from .models import Noticias
 from .forms import FormRegistroNoticias, FormEdicionNoticias
+from Coldeportes.grupos import InformacionUsuario
 # Create your views here.
 
 
@@ -46,6 +47,10 @@ class RegistrarNoticia(TemplateView):
 
 	def get_context_data(self, **kwargs):
 		context = super(RegistrarNoticia, self).get_context_data(**kwargs)
+
+		ver_grupo = InformacionUsuario()
+		grupo = ver_grupo.asignarGrupo(self.request.user)
+		context[grupo] = grupo
 
 		context['form'] = self.form_registrar_noticia
 		return context

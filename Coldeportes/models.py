@@ -1,6 +1,7 @@
 from django.db import models
 from django.utils import timezone
 from django.core.exceptions import ObjectDoesNotExist
+from django.contrib.auth.models import User
 
 # Create your models here.
 
@@ -50,8 +51,10 @@ class Entidad(models.Model):
 	caracter_economico 			= models.SmallIntegerField(choices=opt_caracter_economico)
 	ubicacion 					= models.ForeignKey(Ubicacion)
 	telefono					= models.BigIntegerField()
+	correo						= models.EmailField(default='informacion@coldeportes.gov.co')
 	cc_representante_legal		= models.BigIntegerField()
-	nombre_representante_legal	= models.CharField(max_length=30)	
+	nombre_representante_legal	= models.CharField(max_length=30)
+	usuario 					= models.OneToOneField(User, default=1)
 
 	def __str__(self):
 		return self.nombre

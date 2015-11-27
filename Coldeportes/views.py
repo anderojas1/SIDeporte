@@ -10,6 +10,10 @@ class DetallesEntidad(TemplateView):
 
 	def get_context_data(self, **kwargs):
 		context = super(DetallesEntidad, self).get_context_data(**kwargs)
+
+		ver_grupo = InformacionUsuario()
+		grupo = ver_grupo.asignarGrupo(self.request.user)
+		context[grupo] = grupo
 		
 		self.entidad = Entidad.objects.get(codigo = kwargs['id_entidad'])
 		if 'entidad' not in context:
@@ -23,6 +27,11 @@ class RegistrarEntidad(TemplateView):
 
 	def get_context_data(self, **kwargs):
 		context = super(RegistrarNoticia, self).get_context_data(**kwargs)
+
+		usuario = self.request.user
+		ver_grupo = InformacionUsuario()
+		grupo = ver_grupo.verGrupo(usuario)
+		context[grupo] = grupo
 
 		context['form'] = self.form_registrar_noticia
 		return context

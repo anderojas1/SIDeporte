@@ -1,31 +1,23 @@
 from django.shortcuts import render
 from django.contrib.auth import authenticate, login
 from django.views.generic import TemplateView
+from Coldeportes.models import Entidad
+from Coldeportes.grupos import InformacionUsuario
 #from .forms import LoginForm
 
 class Index(TemplateView):
 	template_name = 'startbootstrap/pages/index.html'
 
-
-"""class Login(TemplateView):
-	template_name = 'startbootstrap/pages/login.html'
-	loginform = LoginForm
-
 	def get_context_data(self, **kwargs):
-		context = super(Login, self).get_context_data(**kwargs)
-		if 'loginform' not in context:
-			context['loginform'] = self.loginform
+		context = super(Index, self).get_context_data(**kwargs)
+
+		ver_grupo = InformacionUsuario()
+		grupo = ver_grupo.asignarGrupo(self.request.user)
+		context[grupo] = grupo
+		print(grupo)
+		#entidad = Entidad.objects.get(codigo=kwargs['id_entidad'])
+
+		#if entidad.usuario == usuario:
+		#	context['editable'] = True
 
 		return context
-
-	def post(self, request, *args, **kwargs):
-		self.loginform = LoginForm(request.POST)
-		if self.loginform.is_valid():
-			usuario = self.loginform.cleaned_data['username']
-			password = self.loginform.cleaned_data['password']
-
-			user = authenticate(username=username, password=password)
-
-			if user is not None and user.is_active:
-				login(request, user)
-				return render (request, '/')"""
