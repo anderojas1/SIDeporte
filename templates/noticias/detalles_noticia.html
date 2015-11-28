@@ -7,15 +7,46 @@
 {{noticia.titulo}}
 {% endblock %}
 
-{% block noticia %}
+{% block content %}
 	<div class="panel panel-default">
+		<div class="panel-heading">
+			Detalles de {{noticia.titulo}}
+		</div>
 		<div class="panel-body">
+			{% if edit_not %}
+				<h2>
+					<small>
+						<p class="text-success">
+							{{edit_not}}
+						</p>
+					</small>
+				</h2>
+				<br>
+			{% endif %}
 			Fecha de publicación: {{noticia.fecha}}<br>
 			<hr>
-			<img src="../../imagenes/{{ MEDIA_URL}}{{noticia.imagen}}" alt="{{noticia.titulo}}" width="1000px" /><br><br>
-			{{noticia.contenido}}<br><br>
-			<a href="update"><button class="btn btn-warning">Editar</button></a>
-			<a href="delete"><button class="btn btn-danger">Eliminar</button></a>
+			<center>
+				<img src="../../imagenes/{{ MEDIA_URL}}{{noticia.imagen}}" alt="{{noticia.titulo}}" />
+			</center>
+			<hr>
+			<p class="text-justify">
+				{{noticia.contenido}}
+			</p>
+			<br>
+			{% if coldeportes %}
+			<div class="row">
+				<div class="col-sm-6">
+					<a href="update">
+						<button type="button" class="btn btn-warning btn-lg btn-block">Editar</button>
+					</a>				
+				</div>
+				<div class="col-sm-6">
+					<a href="update">	
+						<button type="button" class="btn btn-danger btn-lg btn-block">Borrar</button>
+					</a>					
+				</div>				
+			</div>
+			{% endif %}
 		</div>
 	</div>
 {% endblock %}
