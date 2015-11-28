@@ -3,6 +3,7 @@ from django.views.generic import TemplateView
 
 from .models import Entidad, Deportistas
 from .forms import FormRegistroEntidad
+from .grupos import InformacionUsuario
 
 class DetallesEntidad(TemplateView):
 	template_name = 'Entidades/detalles_entidad.html'
@@ -61,6 +62,22 @@ class DetallesDeportistas(TemplateView):
 		self.deportista = Deportistas.objects.get(doc_identidad = kwargs['id_deportista'])
 		if 'deportistas' not in context:
 			context['deportistas'] = self.deportista
+		return context
+
+class BuscarEntidades(TemplateView):
+	template_name = 'Entidades/buscar_entidades.html'
+	entidades = []
+
+	def get_context_data(self, **kwargs):
+		context = super(BuscarEntidades, self).get_context_data(**kwargs)
+
+		self.entidades = Entidad.objects.filter(estado=True)
+		context['entidades'] = self.entidades
+
+		ver_grupo = InformacionUsuario()
+		grupo = ver_grupo.asignarGrupo(self.request.user)
+		context[grupo] = grupo
+
 		return context
 
 class BorrarDeportistas(TemplateView):

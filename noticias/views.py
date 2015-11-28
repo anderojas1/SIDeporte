@@ -15,6 +15,10 @@ class DetallesNoticia(TemplateView):
 	def get_context_data(self, **kwargs):
 		context = super(DetallesNoticia, self).get_context_data(**kwargs)
 
+		ver_grupo = InformacionUsuario()
+		grupo = ver_grupo.asignarGrupo(self.request.user)
+		context[grupo] = grupo
+
 		self.noticia = Noticias.objects.get(pk=self.kwargs['id_noticias'])
 		if 'noticia' not in context:
 			context['noticia'] = self.noticia
@@ -37,6 +41,10 @@ class BuscarNoticias(TemplateView):
 
 		self.noticias = Noticias.objects.filter(estado=True)
 		context['noticias'] = self.noticias
+
+		ver_grupo = InformacionUsuario()
+		grupo = ver_grupo.asignarGrupo(self.request.user)
+		context[grupo] = grupo
 
 		return context
 
@@ -81,6 +89,10 @@ class BorrarNoticia(TemplateView):
 		noticia = Noticias.objects.get(codigo=kwargs['id_noticias'])
 		context['noticia'] = noticia
 
+		ver_grupo = InformacionUsuario()
+		grupo = ver_grupo.asignarGrupo(self.request.user)
+		context[grupo] = grupo
+
 		return context
 
 	def post(self, request, *args, **kwargs):
@@ -90,6 +102,10 @@ class BorrarNoticia(TemplateView):
 		noticia.estado = False
 		noticia.save(update_fields=['estado'])
 		context['borra_noticia'] = 'Se ha borrado la noticia exitosamente'
+
+		ver_grupo = InformacionUsuario()
+		grupo = ver_grupo.asignarGrupo(self.request.user)
+		context[grupo] = grupo
 
 		return render(request, 'noticias/buscar_noticias.html', context)
 
@@ -105,6 +121,10 @@ class EditarNoticia (TemplateView):
 		noticia = Noticias.objects.get(codigo=kwargs['id_noticias'])
 		context['noticia'] = noticia
 
+		ver_grupo = InformacionUsuario()
+		grupo = ver_grupo.asignarGrupo(self.request.user)
+		context[grupo] = grupo
+
 		return context
 
 	def post(self, request, *args, **kwargs):
@@ -112,6 +132,10 @@ class EditarNoticia (TemplateView):
 		noticia = Noticias.objects.get(codigo=kwargs['id_noticias'])
 		if 'noticia' not in context:
 			context['noticia'] = noticia
+
+		ver_grupo = InformacionUsuario()
+		grupo = ver_grupo.asignarGrupo(self.request.user)
+		context[grupo] = grupo
 
 		form = FormEdicionNoticias(request.POST, request.FILES)
 
@@ -126,6 +150,7 @@ class EditarNoticia (TemplateView):
 			noticia.contenido = contenido
 			noticia.save(update_fields=['titulo'])
 			noticia.save(update_fields=['contenido'])
+			context['edit_not'] = "La noticia \"" + noticia.titulo + "\" ha sido actualizada exitosamente"
 		else:
 			print(self.form.errors)
 		return render(request, "noticias/detalles_noticia.html", context)

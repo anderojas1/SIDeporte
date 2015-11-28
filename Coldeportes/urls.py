@@ -1,11 +1,12 @@
 from django.conf.urls import include, url, patterns
 from django.contrib import admin
 
-from .views import DetallesEntidad, DetallesDeportistas, BorrarDeportistas, BuscarDeportistas
+from .views import DetallesEntidad, DetallesDeportistas, BorrarDeportistas, BuscarDeportistas, BuscarEntidades
 
 
 entidad_urls = patterns('',
 	url(r'^(?P<id_entidad>\d+)/$', DetallesEntidad.as_view(), name='detalles_entidad'),
+	url(r'^buscar$', BuscarEntidades.as_view(), name='detalles_entidad'),
 )
 
 deportistas_urls = patterns('',

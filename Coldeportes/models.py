@@ -43,11 +43,11 @@ class Dedicacion(models.Model):
 class Entidad(models.Model):
 	codigo 						= models.CharField(max_length=30, primary_key=True)
 	nombre 						= models.CharField(max_length=30)
-	opt_tipo					= ((0, 'rector'), (1, 'Departamento'), (2, 'municipal o distrital'), (3, 'club'),(4, 'escuela'),(5, 'instituto'))
+	opt_tipo					= ((0, 'rector'), (1, 'Departamental'), (2, 'municipal o distrital'), (3, 'club'),(4, 'escuela'),(5, 'instituto'))
 	tipo 						= models.SmallIntegerField(choices=opt_tipo)
 	estado 						= models.BooleanField(default=True)
 	dedicacion 					= models.ManyToManyField(Dedicacion)
-	opt_caracter_economico 		= ((1,'privada'),(2,'publica'),(3,'mixta'))
+	opt_caracter_economico 		= ((1,'Privada'),(2,'Pública'),(3,'Mixta'))
 	caracter_economico 			= models.SmallIntegerField(choices=opt_caracter_economico)
 	ubicacion 					= models.ForeignKey(Ubicacion)
 	telefono					= models.BigIntegerField()
@@ -58,6 +58,18 @@ class Entidad(models.Model):
 
 	def __str__(self):
 		return self.nombre
+
+	@models.permalink
+	def get_absolute_url(self):
+		return ("detalles_entidad", [self.codigo])
+
+	def get_caracter(self):
+		if self.caracter_economico == 1:
+			return "Privada"
+		elif self.caracter_economico == 2:
+			return "Pública"
+		else:
+			return "Mixta"
 
 class Escenarios(models.Model):
 	codigo 					= models.CharField(max_length=30, primary_key=True)
