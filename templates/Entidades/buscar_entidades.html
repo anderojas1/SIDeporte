@@ -1,0 +1,75 @@
+{% extends "startbootstrap/pages/index.html" %}
+{% block title %}
+Búsqueda Entidades
+{% endblock %}
+{% block title_content %}
+Entidades activas
+{% endblock %}
+{% block content %}
+	
+	<div class="panel panel-primary">
+        <div class="panel-heading">
+            Entidades registradas
+        </div>
+    	<!-- /.panel-heading -->
+        <div class="panel-body">
+            {% if borra_noticia %}
+                <h2>
+                    <small>
+                        <p class="text-success">
+                            {{borra_noticia}}
+                        </p>
+                    </small>
+                </h2>
+                <br>
+            {% endif %}
+            <div class="dataTable_wrapper">
+            	<div class="row">
+            		<div class="col-sm-12">
+            			<table aria-describedby="dataTables-example_info" role="grid" class="table table-striped table-bordered table-hover dataTable no-footer" id="dataTables-example">
+                    		<thead>
+                                <tr role="row">
+                                	<th>
+                                        Nombre
+                                	</th>
+                                	<th>
+                                        Carácter económico
+                                    </th>
+                                    <th>
+                                        Correo electrónico
+                                    </th>
+                                    <th>
+                                        Representante legal
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            	{% for entidad in entidades %}
+                            	<tr role="row" class="gradeA odd">
+                                    <td class="sorting_1">
+                                    	<a href="{{entidad.get_absolute_url}}">
+                                    		{{entidad.nombre}}
+                                    	</a>
+                                    <td>
+                                    	{{entidad.get_caracter}}
+                                    </td>
+                                    <td>
+                                        {{entidad.correo}}
+                                    </td>
+                                    <td>
+                                        {{entidad.nombre_representante_legal}}
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+        	</div>
+        </div>
+            <!-- /.table-responsive -->
+                <!-- /.panel-body -->
+    </div>
+    <!-- /.panel -->
+
+{% endblock %}
