@@ -11,7 +11,7 @@ Inicio
         <nav class="navbar navbar-default navbar-static-top" role="navigation" style="margin-bottom: 0">
             <div class="navbar-header">
                 <a class="navbar-brand" href="/">
-                    <img src="../../static/logo.png" alt="SIDeportes" />
+                    <img src="/static/logo.png" alt="SIDeportes" />
                 </a>
             </div>
             <!-- /.navbar-header -->
@@ -300,7 +300,15 @@ Inicio
                         {% endif %}
                         {% if user.is_authenticated %}
                         <li>
-                            <a href="/reportes"><i class="fa glyphicon-file fa-fw"></i> Reportes</a>
+                            <a href="/reportes"><i class="fa glyphicon-file fa-fw"></i> Reportes<span class="fa arrow"></span></a>
+                            <ul class="nav nav-second-level">
+                                <li>
+                                    <a href="/reportes/graficos">Reportes gráficos</a>
+                                </li>
+                                <li>
+                                    <a href="/reportes/tablas">Reportes en tabla</a>
+                                </li>
+                            </ul>
                         </li>
                         {% endif %}
                         <li class="">
