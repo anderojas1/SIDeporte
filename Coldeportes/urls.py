@@ -8,6 +8,7 @@ entidad_urls = patterns('',
 	url(r'^(?P<id_entidad>\d+)/$', DetallesEntidad.as_view(), name='detalles_entidad'),
 	url(r'^buscar$', BuscarEntidades.as_view(), name='detalles_entidad'),
 	url(r'^registrar$', RegistrarEntidad.as_view(), name='registrar_entidad'),
+	url(r'^ubicacion$', UbicacionEntidades.as_view(), name='ubicacion_entidades'),
 )
 
 deportistas_urls = patterns('',

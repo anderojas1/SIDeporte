@@ -62,6 +62,19 @@ class RegistrarEntidad(TemplateView):
 			context['form'] = self.form_registrar_noticia
 			return render(request, self.template_name, context)
 
+class UbicacionEntidades(TemplateView):
+	template_name = 'Entidades/ubicacion_entidades.html'
+
+	def get_context_data(self, **kwargs):
+		context = super(UbicacionEntidades, self).get_context_data(**kwargs)
+
+		usuario = self.request.user
+		ver_grupo = InformacionUsuario()
+		grupo = ver_grupo.verGrupo(usuario)
+		context[grupo] = grupo
+
+		return context
+
 class DetallesDeportistas(TemplateView):
 	template_name = 'Deportistas/detalles_deportista.html'
 	entidad = None
