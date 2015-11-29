@@ -17,7 +17,7 @@ Borrar Noticia
 		<div class="panel-body">
 			<form action="" method="post">
 			{% csrf_token %}
-    			<p>¿Realmente desea eliminar la noticia {{noticia.titulo}}?</p>
+    			<p>¿Realmente desea eliminar la noticia "{{noticia.titulo}}"?</p>
     			<button class= "btn btn-danger" type="submit">Sí, eliminar</button>
 			</form>
 		</div>
