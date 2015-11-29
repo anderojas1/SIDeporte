@@ -1,8 +1,8 @@
 from django.shortcuts import render
 from django.views.generic import TemplateView
 
-from .models import Entidad, Deportistas
-from .forms import FormRegistroEntidad
+from .models import Entidad, Deportistas, Ubicacion, Dedicacion
+from .forms import FormRegistroEntidad, FormRegistroDedicacionEntidad
 from .grupos import InformacionUsuario
 
 class DetallesEntidad(TemplateView):
@@ -24,27 +24,37 @@ class DetallesEntidad(TemplateView):
 
 class RegistrarEntidad(TemplateView):
 	template_name = 'Entidades/registrar_entidad.html'
-	form_registrar_noticia = FormRegistroEntidad()
+	form_registrar_entidad = FormRegistroEntidad()
+	form_registro_dedicacion = FormRegistroDedicacionEntidad()
 
 	def get_context_data(self, **kwargs):
-		context = super(RegistrarNoticia, self).get_context_data(**kwargs)
+		context = super(RegistrarEntidad, self).get_context_data(**kwargs)
 
 		usuario = self.request.user
 		ver_grupo = InformacionUsuario()
 		grupo = ver_grupo.verGrupo(usuario)
 		context[grupo] = grupo
+		print(grupo)
+		dedicacion = Dedicacion.objects.all()
+		context['dedicaciones'] = dedicacion
+		print(dedicacion)
 
-		context['form'] = self.form_registrar_noticia
+		context['form_entidad'] = self.form_registrar_entidad
+		context['form_dedicacion'] = self.form_registro_dedicacion
 		return context
 
 	def post(self, request, *args, **kwargs):
 		context = super(RegistrarNoticia, self).get_context_data(**kwargs)
-		self.form_registrar_noticia = FormRegistroNoticias(request.POST, request.FILES)
+		self.form_registrar_entidad = FormRegistroNoticias(request.POST)
 
-		if self.form_registrar_noticia.is_valid():
+		if self.form_registrar_entidad.is_valid():
 			print('es válido')
-			self.form_registrar_noticia.save()
+			self.form_registrar_entidad.save()
 			context['exito'] = 'La noticia ha sido registrada exitosamente'
+
+			ver_grupo = InformacionUsuario()
+			grupo = ver_grupo.asignarGrupo(self.request.user)
+			context[grupo] = grupo
 
 			return render(request, self.template_name, context)
 

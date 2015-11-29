@@ -17,6 +17,7 @@ from django.conf.urls import include, url
 from django.contrib import admin
 import noticias.urls 
 import Coldeportes.urls
+import reportes.urls
 from .views import Index
 from SIDeporte import settings
 
@@ -30,4 +31,5 @@ urlpatterns = [
     url(r'^logout/$', 'django.contrib.auth.views.logout', {'next_page': 'login'}),
     url(r'^imagenes/(?P<path>.*)$', 'django.views.static.serve',
             {'document_root': settings.MEDIA_ROOT,}),
+    url(r'^reportes/', include(reportes.urls)),
 ]

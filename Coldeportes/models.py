@@ -17,42 +17,25 @@ class Ubicacion(models.Model):
 
 class Dedicacion(models.Model):
 	id = models.AutoField(primary_key=True)
-	opt_dedicacion				= ((1,'deporte'),(2,'recreacion'),(3,'aprovechamiento tiempo libre'),(4,'educacion extraescolar'),(5,'educacion fisica'))
-	dedicacion 					= models.SmallIntegerField(choices=opt_dedicacion)
+	dedicacion = models.CharField(max_length=50)
 
 	def __str__(self):
-		
-		if self.dedicacion == 1:  
-			return str('deporte')
-			
-		if self.dedicacion == 2:
-			return str('recreacion')
-
-		if self.dedicacion == 3:
-			return str('aprovechamiento tiempo libre')
-
-		if self.dedicacion == 4:
-			return str('educacion extraescolar')
-
-		if self.dedicacion == 5:
-			return str('educacion fisica')
-
-
+		return self.dedicacion
 		
 
 class Entidad(models.Model):
-	codigo 						= models.CharField(max_length=30, primary_key=True)
+
+	codigo						= models.CharField(max_length=30, primary_key=True)
 	nombre 						= models.CharField(max_length=30)
-	opt_tipo					= ((0, 'rector'), (1, 'Departamental'), (2, 'municipal o distrital'), (3, 'club'),(4, 'escuela'),(5, 'instituto'))
+	opt_tipo					= ((0, 'Rector'), (1, 'Departamental'), (2, 'Municipal o Distrital'), (3, 'Club'),(4, 'Escuela'),(5, 'Instituto'))
 	tipo 						= models.SmallIntegerField(choices=opt_tipo)
 	estado 						= models.BooleanField(default=True)
-	dedicacion 					= models.ManyToManyField(Dedicacion)
 	opt_caracter_economico 		= ((1,'Privada'),(2,'Pública'),(3,'Mixta'))
 	caracter_economico 			= models.SmallIntegerField(choices=opt_caracter_economico)
 	ubicacion 					= models.ForeignKey(Ubicacion)
 	telefono					= models.BigIntegerField()
 	correo						= models.EmailField(default='informacion@coldeportes.gov.co')
-	cc_representante_legal		= models.BigIntegerField()
+	cc_representante_legal		= models.CharField(max_length=20)
 	nombre_representante_legal	= models.CharField(max_length=30)
 	usuario 					= models.OneToOneField(User, default=1)
 
@@ -71,10 +54,29 @@ class Entidad(models.Model):
 		else:
 			return "Mixta"
 
+	def get_tipo(self):
+		if self.tipo == 0:
+			return "Rector"
+		elif self.tipo == 1:
+			return "Departamental"
+		elif self.tipo == 2:
+			return "Municipal o Distrital"
+		elif self.tipo == 3:
+			return "Club"
+		elif self.tipo == 4:
+			return "Escuela"
+		else:
+			return "Instituto"
+
+class DedicacionEntidad(models.Model):
+	id = models.AutoField(primary_key=True)
+	entidad = models.ForeignKey(Entidad)
+	dedicacion = models.ForeignKey(Dedicacion)
+
 class Escenarios(models.Model):
 	codigo 					= models.CharField(max_length=30, primary_key=True)
 	nombre 					= models.CharField(max_length=30)
-	estado 					= models.BooleanField(default=True)
+	estado					= models.BooleanField(default=True)
 	departamento_ubicacion 	= models.CharField(max_length=30)	
 	municipio_ubicacion 	= models.CharField(max_length=30)
 	direccion_ubicacion		= models.CharField(max_length=30)
