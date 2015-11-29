@@ -1,0 +1,37 @@
+{% extends "startbootstrap/pages/index.html" %}
+{% load staticfiles %}
+{% block title %}
+	Encuentre la entidad
+{% endblock %}
+
+{% block graphics_js %}
+	<style>
+      #map-canvas {
+        height: 600px;
+        width: 100%;
+        margin: 10px;
+        padding: 10px;
+      }
+    </style>
+	<script src="https://maps.googleapis.com/maps/api/js?v=3.exp"></script>
+	<script>
+      function initialize() {
+        var mapCanvas = document.getElementById('map-canvas');
+        var mapOptions = {
+          center: new google.maps.LatLng(3.0122, -70.5463),
+          zoom: 6,
+          mapTypeId: google.maps.MapTypeId.ROADMAP
+        }
+        var map = new google.maps.Map(mapCanvas, mapOptions)
+      }
+      google.maps.event.addDomListener(window, 'load', initialize);
+    </script>
+{% endblock %}
+{% block title_content %}
+Ubicación geográfica de las entidades deportivas
+{% endblock %}
+{% block content %}
+	<div id="map-canvas">
+	</div>
+	<br>
+{% endblock %}
