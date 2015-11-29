@@ -1,4 +1,5 @@
 {% extends "startbootstrap/pages/index.html" %}
+{% load staticfiles %}
 {% block title %}
 Búsqueda Entidades
 {% endblock %}
@@ -71,5 +72,12 @@ Entidades activas
                 <!-- /.panel-body -->
     </div>
     <!-- /.panel -->
+    <div class="row">
+        <div class="col-sm-12">
+            <p>
+                <a href="ubicacion">Ver ubicación de las entidades</a>
+            </p>
+        </div>
+    </div>
 
 {% endblock %}
