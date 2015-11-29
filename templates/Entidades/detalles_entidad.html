@@ -7,15 +7,106 @@
 {{noticia.nombre}}
 {% endblock %}
 
-{% block noticia %}
+{% block content %}
 	<div class="panel panel-default">
+		<div class="panel-heading">
+			<h2>
+				<p class="text-primary">
+					<strong>Detalles de {{entidad.nombre}}</strong>
+				</p>	
+			</h2>
+		</div>
 		<div class="panel-body">
-			{{entidad.tipo}}
-			{{entidad.estado}}
-			{{entidad.caracter_economico}}
-			{{entidad.dedicacion}}
-
-			<h1>Oscarrrr!!</h1>
+			{% if edit %}
+				<h2>
+					<small>
+						<p class="text-success">
+							{{edit}}
+						</p>
+					</small>
+				</h2>
+				<br>
+			{% endif %}
+			<div class="dataTable_wrapper">
+            	<div class="row">
+            		<div class="col-sm-12">
+            			<table aria-describedby="dataTables-example_info" role="grid" class="table table-striped table-bordered table-hover dataTable no-footer" id="dataTables-example">
+                            <tbody>
+                            	<tr>
+                                    <td>
+                                    	<strong>Nombre</strong>
+                                    </td>
+                                    <td>
+                                    	{{entidad.nombre}}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                    	<strong>Tipo</strong>
+                                    </td>
+                                    <td>
+                                    	{{entidad.get_tipo}}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                    	<strong>Carácter económico</strong>
+                                    </td>
+                                    <td>
+                                    	{{entidad.get_caracter}}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                    	<strong>Teléfono</strong>
+                                    </td>
+                                    <td>
+                                    	{{entidad.telefono}}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                    	<strong>Correo electrónico</strong>
+                                    </td>
+                                    <td>
+                                    	{{entidad.correo}}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                    	<strong>Representante legal</strong>
+                                    </td>
+                                    <td>
+                                    	{{entidad.nombre_representante_legal}}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                    	<strong>Identificación del representante legal</strong>
+                                    </td>
+                                    <td>
+                                    	{{entidad.cc_representante_legal}}
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+        	</div>
+			{% if coldeportes %}
+			<div class="row">
+				<div class="col-sm-6">
+					<a href="update">
+						<button type="button" class="btn btn-warning btn-lg btn-block">Editar</button>
+					</a>				
+				</div>
+				<div class="col-sm-6">
+					<a href="delete">	
+						<button type="button" class="btn btn-danger btn-lg btn-block">Borrar</button>
+					</a>					
+				</div>				
+			</div>
+			{% endif %}
 		</div>
 	</div>
 {% endblock %}

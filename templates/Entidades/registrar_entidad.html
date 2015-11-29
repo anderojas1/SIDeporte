@@ -7,33 +7,72 @@
 	Registrar Entidad
 {% endblock %}
 
-{% block noticia %}
-	{% if form %}
+{% block content %}
+	{% if form_entidad %}
 	{{form.errors}}
 	<div class="panel panel-default">
 		<div class="panel-heading">
 			Registro Entidades 		
 		</div>
 		<div class="panel-body">
-			<form role="form" enctype="multipart/form-data" method="POST">
+			<form role="form" method="POST">
 			{% csrf_token %}
 				<div class="form-group">
 					<label>
-						Nombre
+						Nombre completo
 					</label>
-					{{form.nombre}}
+					{{form_entidad.nombre}}
 				</div>
 				<div class="form-group">
-					<div class="dropdown">
-	  					<button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Tipo
-						<span class="caret"></span></button>
-	 					<ul class="dropdown-menu">
-	   						 {{form.tipo}}
-						</ul>
-					</div>
+					<label>
+						Seleccione el tipo de entidad
+					</label>
+					{{form_entidad.tipo}}
 				</div>
-				
-				<button type="submit" class="btn btn-primary btn-lg btn-block">Enviar Noticia</button>
+				<div class="form-group">
+					<label>
+						Dedicación (Puede escoger más de una)
+					</label>
+					{% for dedicacion in dedicaciones %}
+						<div class="checkbox">						
+							<label>
+								<input type="checkbox" id="id_dedicacion" name="dedicacion">
+								{{dedicacion}}
+							</label>											
+						</div>
+					{% endfor %}
+				</div>
+				<div class="form-group">
+					<label>
+						Carácter económico
+					</label>
+						{{form_entidad.caracter_economico}}
+				</div>
+				<div class="form-group">
+					<label>
+						Teléfono
+					</label>
+						{{form_entidad.telefono}}
+				</div>
+				<div class="form-group">
+					<label>
+						Correo electrónico
+					</label>
+					<input class="form-control" id="id_correo" maxlength="254" name="correo" placeholder="Email" type="text">
+				</div>
+				<div class="form-group">
+					<label>
+						Número de identificación del representante legal
+					</label>
+						{{form_entidad.cc_representante_legal}}
+				</div>
+				<div class="form-group">
+					<label>
+						Nombre completo del representante legal
+					</label>
+						{{form_entidad.nombre_representante_legal}}
+				</div>			
+				<button type="submit" class="btn btn-primary btn-lg btn-block">Registrar Entidad</button>
 			</form>
 		</div>
 	</div>
