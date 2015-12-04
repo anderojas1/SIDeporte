@@ -68,7 +68,6 @@ class RegistrarNoticia(TemplateView):
 		self.form_registrar_noticia = FormRegistroNoticias(request.POST, request.FILES)
 
 		if self.form_registrar_noticia.is_valid():
-			print('es válido')
 			self.form_registrar_noticia.save()
 			context['exito'] = 'La noticia ha sido registrada exitosamente'
 
