@@ -2,6 +2,10 @@
 {% block title %}
 	Registrar Nueva Entidad
 {% endblock %}
+{% block graphics_js %}
+	<script type="text/javascript" src="/static/js/prototype.js"></script>
+	<script type="text/javascript" src="/static/js/ubicaciones.js"></script>
+{% endblock %}
 
 {% block title_content %}
 	Registrar Entidad
@@ -16,7 +20,8 @@
 		</div>
 		<div class="panel-body">
 			<form role="form" method="POST">
-			{% csrf_token %}
+				{% csrf_token %}
+				{{form_registrar_entidad.errors}}
 				<div class="form-group">
 					<label>
 						Nombre completo
@@ -33,14 +38,7 @@
 					<label>
 						Dedicación (Puede escoger más de una)
 					</label>
-					{% for dedicacion in dedicaciones %}
-						<div class="checkbox">						
-							<label>
-								<input type="checkbox" id="id_dedicacion" name="dedicacion">
-								{{dedicacion}}
-							</label>											
-						</div>
-					{% endfor %}
+					{{form_dedicacion}}
 				</div>
 				<div class="form-group">
 					<label>
@@ -59,6 +57,24 @@
 						Correo electrónico
 					</label>
 					<input class="form-control" id="id_correo" maxlength="254" name="correo" placeholder="Email" type="text">
+				</div>
+				<div class="form-group">
+					<label>
+						Departamento
+					</label>
+					{{form_ubicacion.type}}
+				</div>
+				<div class="form-group">
+					<label>
+						Municipio
+					</label>
+					{{form_ubicacion.municipio}}
+				</div>
+				<div class="form-group">
+					<label>
+						Dirección
+					</label>
+						{{form_entidad.direccion}}
 				</div>
 				<div class="form-group">
 					<label>
