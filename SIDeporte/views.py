@@ -1,9 +1,11 @@
 from django.shortcuts import render
+from django.core.exceptions import ObjectDoesNotExist
+from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login
 from django.views.generic import TemplateView
 from Coldeportes.models import Entidad
 from Coldeportes.grupos import InformacionUsuario
-#from .forms import LoginForm
+from django.contrib.auth import authenticate
 
 class Index(TemplateView):
 	template_name = 'startbootstrap/pages/index.html'
