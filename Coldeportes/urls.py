@@ -9,6 +9,7 @@ entidad_urls = patterns('',
 	url(r'^buscar$', BuscarEntidades.as_view(), name='detalles_entidad'),
 	url(r'^registrar$', RegistrarEntidad.as_view(), name='registrar_entidad'),
 	url(r'^ubicacion$', UbicacionEntidades.as_view(), name='ubicacion_entidades'),
+	url(r'^buscarmunicipios$', ajax_get_municipios, name='ajax_get_municipios'),
 )
 
 deportistas_urls = patterns('',
