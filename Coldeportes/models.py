@@ -9,11 +9,16 @@ from django.contrib.auth.models import User
 class Ubicacion(models.Model):
 	codigo 		= models.AutoField(primary_key=True)
 	departamento= models.CharField(max_length=30)	
-	municipio 	= models.CharField(max_length=30)
-	direccion	= models.CharField(max_length=30)
+	municipio 	= models.CharField(max_length=100)
 
 	def __int__(self):
 		return self.codigo
+
+	def __str__(self):
+		return self.municipio + "," + self.departamento
+		
+	def get_ubicacion(self):
+		return departamento + ", " + municipio
 
 class Dedicacion(models.Model):
 	id = models.AutoField(primary_key=True)
@@ -32,15 +37,25 @@ class Entidad(models.Model):
 	estado 						= models.BooleanField(default=True)
 	opt_caracter_economico 		= ((1,'Privada'),(2,'Pública'),(3,'Mixta'))
 	caracter_economico 			= models.SmallIntegerField(choices=opt_caracter_economico)
-	ubicacion 					= models.ForeignKey(Ubicacion)
+	ubicacion 					= models.ForeignKey(Ubicacion, null=True)
 	telefono					= models.BigIntegerField()
 	correo						= models.EmailField(default='informacion@coldeportes.gov.co')
+	direccion   				= models.CharField(max_length=50, default='')
 	cc_representante_legal		= models.CharField(max_length=20)
 	nombre_representante_legal	= models.CharField(max_length=30)
-	usuario 					= models.OneToOneField(User, default=1)
+	usuario 					= models.OneToOneField(User, null=True)
 
 	def __str__(self):
 		return self.nombre
+
+	def save(self, *args, **kwargs):
+		if len(kwargs) == 0:
+			codigo = self.nombre + str(self.tipo)
+			self.codigo = codigo
+
+			return super(Entidad, self).save(*args, **kwargs)
+		else:
+			return super(Entidad, self).save(*args, **kwargs)
 
 	@models.permalink
 	def get_absolute_url(self):
