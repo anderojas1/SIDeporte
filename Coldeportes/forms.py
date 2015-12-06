@@ -2,18 +2,6 @@ from django.forms import ModelForm
 from django import forms
 from django.forms.extras.widgets import SelectDateWidget
 from .models import Entidad, Ubicacion, Deportistas, DedicacionEntidad, Dedicacion
-from django.forms.forms import BaseForm
-
-class AsDiv(BaseForm):
-
-	def as_div(self):
-	   	return self._html_output(
-	        normal_row = u'<div%(html_class_attr)s>%(errors)s%(label)s %(field)s%(help_text)s</div>',
-	        error_row = u'<div>%s</div>',
-	        row_ender = '</div>',
-	        help_text_html = u' <span class="helptext">%s</span>',
-	        errors_on_separate_row = False)
-
 
 class FormRegistroEntidad (ModelForm):
 
@@ -76,7 +64,7 @@ class FormRegistroUbicacion (forms.Form):
 			return cleaned_data
 
 		
-class FormRegistroDedicacionEntidad(forms.Form, AsDiv):
+class FormRegistroDedicacionEntidad(forms.Form):
 
 	dedicaciones = [(ded.dedicacion, ded.dedicacion) for ded in Dedicacion.objects.all()]
 	escoger_dedicaciones = forms.MultipleChoiceField(required=True,

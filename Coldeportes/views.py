@@ -48,12 +48,12 @@ class RegistrarEntidad(TemplateView):
 		ver_grupo = InformacionUsuario()
 		grupo = ver_grupo.verGrupo(usuario)
 		context[grupo] = grupo
-		print(grupo)
 		dedicacion = Dedicacion.objects.all()
 		context['dedicaciones'] = dedicacion
 
 		context['form_entidad'] = self.form_registrar_entidad
 		context['form_dedicacion'] = self.form_registro_dedicacion
+		print(self.form_registro_dedicacion)
 		context['form_ubicacion'] = self.form_ubicacion
 		return context
 
@@ -64,6 +64,7 @@ class RegistrarEntidad(TemplateView):
 		self.form_ubicacion = FormRegistroUbicacion(request.POST)
 		municipio = request.POST['municipio']
 		departamento = request.POST['type']
+		print(request.POST)
 
 		# SI LOS FORMULARIOS DE DEDICACIÓN Y REGISTRO DE ENTIDAD ESTÁN CORRECTOS
 		if self.form_registrar_entidad.is_valid() and self.form_registro_dedicacion.is_valid():
