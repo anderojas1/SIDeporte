@@ -1,6 +1,28 @@
 {% extends "startbootstrap/pages/index.html" %}
+{% load staticfiles %}
 {% block title %}
-    Entidades | {{entidad.codigo}}
+    Entidades | {{entidad.nombre}}
+{% endblock %}
+
+{% block graphics_js %}
+    <script type="text/javascript" src="{% static 'js/geolocalizacion.js' %}"></script>
+    <style>
+      #map-canvas {
+        height: 300px;
+        width: 100%;
+        margin: 10px;
+        padding: 10px;
+      }
+    </style>
+    <script src="https://maps.googleapis.com/maps/api/js?v=3.exp"></script>
+    <script>
+      window.onload = function initialize() {
+        
+        var direccion = "{{entidad.direccion}}, {{ubicacion.municipio}}, {{ubicacion.departamento}}, COLOMBIA";
+        geoposicionar(direccion);
+      google.maps.event.addDomListener(window, 'load', initialize);
+    }
+    </script>
 {% endblock %}
 
 {% block title_content %}
@@ -109,4 +131,14 @@
 			{% endif %}
 		</div>
 	</div>
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            Ubíquese
+        </div>
+        <div class="panel-body">
+            <div id="map-canvas">
+                
+            </div>
+        </div>
+    </div>
 {% endblock %}

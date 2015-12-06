@@ -24,6 +24,10 @@ class DetallesEntidad(TemplateView):
 		if 'entidad' not in context:
 			context['entidad'] = self.entidad
 
+		ubicacion = self.entidad.ubicacion
+		if 'ubicacion' not in context:
+			context['ubicacion'] = ubicacion
+
 		return context
 
 class RegistrarEntidad(TemplateView):
