@@ -108,6 +108,35 @@ class RegistrarEntidad(TemplateView):
 			print(self.form_registro_dedicacion.errors)
 			return render(request, self.template_name, context)
 
+class BorrarEntidad(TemplateView):
+	template_name = 'Entidades/borrar_entidad.html'
+
+	def get_context_data(self, **kwargs):
+		context = super(BorrarEntidad, self).get_context_data(**kwargs)
+
+		entidad = Entidad.objects.get(codigo=kwargs['id_entidad'])
+		context['entidad'] = entidad
+
+		ver_grupo = InformacionUsuario()
+		grupo = ver_grupo.asignarGrupo(self.request.user)
+		context[grupo] = grupo
+
+		return context
+
+	def post(self, request, *args, **kwargs):
+		context = super(BorrarEntidad, self).get_context_data(**kwargs)
+
+		entidad = Entidad.objects.get(codigo=kwargs['id_entidad'])
+		entidad.estado = False
+		entidad.save(update_fields=['estado'])
+		context['borra_entidad'] = 'Se ha borrado la entidad exitosamente'
+
+		ver_grupo = InformacionUsuario()
+		grupo = ver_grupo.asignarGrupo(self.request.user)
+		context[grupo] = grupo
+
+		return render(request, 'Entidades/buscar_entidades.html', context)
+
 class UbicacionEntidades(TemplateView):
 	template_name = 'Entidades/ubicacion_entidades.html'
 
