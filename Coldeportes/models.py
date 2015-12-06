@@ -50,8 +50,9 @@ class Entidad(models.Model):
 
 	def save(self, *args, **kwargs):
 		if len(kwargs) == 0:
-			codigo = self.nombre + str(self.tipo)
+			codigo = self.nombre.lower()
 			self.codigo = codigo
+			self.estado = True
 
 			return super(Entidad, self).save(*args, **kwargs)
 		else:
