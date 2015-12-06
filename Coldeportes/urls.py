@@ -5,8 +5,8 @@ from .views import *
 
 
 entidad_urls = patterns('',
-	url(r'^(?P<id_entidad>\d+)/$', DetallesEntidad.as_view(), name='detalles_entidad'),
-	url(r'^buscar$', BuscarEntidades.as_view(), name='detalles_entidad'),
+	url(r'^(?P<id_entidad>\w+)/$', DetallesEntidad.as_view(), name='detalles_entidad'),
+	url(r'^buscar$', BuscarEntidades.as_view(), name='buscar_entidades'),
 	url(r'^registrar$', RegistrarEntidad.as_view(), name='registrar_entidad'),
 	url(r'^ubicacion$', UbicacionEntidades.as_view(), name='ubicacion_entidades'),
 	url(r'^buscarmunicipios$', ajax_get_municipios, name='ajax_get_municipios'),
