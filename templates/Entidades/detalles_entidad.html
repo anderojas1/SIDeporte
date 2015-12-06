@@ -80,6 +80,40 @@
                                 </tr>
                                 <tr>
                                     <td>
+                                        <strong>Dedicación</strong>
+                                    </td>
+                                    <td>
+                                        {% for dedicacion in dedicaciones %}
+                                            {{dedicacion.dedicacion}} <br>
+                                        {% endfor %}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <strong>Dirección</strong>
+                                    </td>
+                                    <td>
+                                        {{entidad.direccion}}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <strong>Ciudad/Municipio</strong>
+                                    </td>
+                                    <td>
+                                        {{ubicacion.get_municipio}}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <strong>Departamento</strong>
+                                    </td>
+                                    <td>
+                                        {{ubicacion.get_departamento}}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
                                     	<strong>Teléfono</strong>
                                     </td>
                                     <td>

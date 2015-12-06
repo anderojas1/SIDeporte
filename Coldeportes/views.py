@@ -28,6 +28,11 @@ class DetallesEntidad(TemplateView):
 		if 'ubicacion' not in context:
 			context['ubicacion'] = ubicacion
 
+		dedicaciones = DedicacionEntidad.objects.filter(entidad_id=self.entidad.codigo)
+
+		if 'dedicaciones' not in context:
+			context['dedicaciones'] = dedicaciones
+
 		return context
 
 class RegistrarEntidad(TemplateView):

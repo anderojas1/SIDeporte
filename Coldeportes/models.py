@@ -20,6 +20,12 @@ class Ubicacion(models.Model):
 	def get_ubicacion(self):
 		return departamento + ", " + municipio
 
+	def get_municipio(self):
+		return self.municipio.lower().title()
+
+	def get_departamento(self):
+		return self.departamento.lower().title()
+
 class Dedicacion(models.Model):
 	id = models.AutoField(primary_key=True)
 	dedicacion = models.CharField(max_length=50)
