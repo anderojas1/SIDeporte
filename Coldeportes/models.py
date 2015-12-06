@@ -50,7 +50,10 @@ class Entidad(models.Model):
 
 	def save(self, *args, **kwargs):
 		if len(kwargs) == 0:
-			codigo = self.nombre.lower()
+
+			codigo = self.nombre.lower()+str(self.tipo)+str(self.caracter_economico)
+			codigo = codigo.replace(" ", "")
+			print (codigo)
 			self.codigo = codigo
 			self.estado = True
 

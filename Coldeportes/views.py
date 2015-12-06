@@ -3,6 +3,7 @@ from django.views.generic import TemplateView
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.csrf import ensure_csrf_cookie
 from django.core.exceptions import ObjectDoesNotExist
+from django.contrib.auth.models import User, Group
 
 from .models import Entidad, Deportistas, Ubicacion, Dedicacion, DedicacionEntidad
 from .forms import *
@@ -55,22 +56,42 @@ class RegistrarEntidad(TemplateView):
 		municipio = request.POST['municipio']
 		departamento = request.POST['type']
 
+		# SI LOS FORMULARIOS DE DEDICACIÓN Y REGISTRO DE ENTIDAD ESTÁN CORRECTOS
 		if self.form_registrar_entidad.is_valid() and self.form_registro_dedicacion.is_valid():
 			nombre = self.form_registrar_entidad.cleaned_data['nombre']
 			try:
+
+				# BUSCAR EN LA BD SI EL DEPARTAMENTO Y MUNICIPIO EXISTEN
 				ubicacion = Ubicacion.objects.get(departamento=departamento, municipio=municipio)
+
+				# REGISTRO DE LA ENTIDAD
 				self.form_registrar_entidad.save()
 				entidad = Entidad.objects.get(nombre=nombre)
+
+				# ASIGNACIÓN DE UBICACIÓN
 				entidad.ubicacion = ubicacion
 				entidad.save(update_fields=['ubicacion'])
-				print(self.form_registro_dedicacion.cleaned_data)
+
+				# REGISTRO DE DEDICACIONES (TANTAS COMO HAYA SELECCIONADO)
 				for dedicacion in self.form_registro_dedicacion.cleaned_data['escoger_dedicaciones']:
 					ded = Dedicacion.objects.get(dedicacion=dedicacion)
 					ded_ent = DedicacionEntidad(dedicacion=ded, entidad=entidad)
 					ded_ent.save()
+
+				# CREACIÓN DE USUARIO EN LA BASE DE DATOS
+				usuario = User.objects.create_user(username=entidad.correo, password=str(entidad.cc_representante_legal))
+				entidad.usuario = usuario
+				entidad.save(update_fields=['usuario'])
+
+				# ASIGNACIÓN DE GRUPO EN LA BASE DE DATOS
+				grupo = Group.objects.get(name='entidad')
+				usuario.groups.add(grupo)
+
 				context['exito'] = 'La entidad ha sido registrada exitosamente'
 				return render(request, self.template_name, context)
 			except ObjectDoesNotExist:
+
+				# SI NO EXISTE LA UBICACIÓN
 				return render(request, self.template_name, context)
 
 		else:
