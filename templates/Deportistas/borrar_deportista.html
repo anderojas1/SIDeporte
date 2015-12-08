@@ -1,0 +1,24 @@
+{% extends "startbootstrap/pages/index.html" %}
+
+{% block title %}
+Borrar Deportista {{deportistas.doc_identidad}}
+{% endblock %}
+{% block title_content %}
+Borrar Deportista
+{% endblock %}
+
+{% block noticia %}
+	<div class="panel panel-danger">
+		<div class="panel-heading">
+			<i class="fa fa-hacker-news fa-fw"> </i>
+			Borrar {{deportistas.nombre}}
+		</div>
+		<div class="panel-body">
+			<form action="" method="post">
+			{% csrf_token %}
+    			<p>¿Realmente desea eliminar al deportista {{deportistas.nombre}}?</p>
+    			<button class= "btn btn-danger" type="submit">Sí, eliminar</button>
+			</form>
+		</div>
+	</div>
+{% endblock %}
