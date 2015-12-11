@@ -1,0 +1,195 @@
+{% extends "startbootstrap/pages/index.html" %}
+
+{% block title %}
+Editar entidad {{id_entidad}}
+{% endblock %}
+
+{% block title_content %}
+Editar Entidad
+{% endblock %}
+{% block content %}
+	<div class="panel panel-default">
+		<div class="panel-heading">
+			<i class="fa fa-hacker-news fa-fw"> </i>
+			Entidad {{entidad.nombre}}
+		</div>
+		<div class="panel-body">
+			<form role="form" method="post" enctype="multipart/form-data" id="form">
+				{% csrf_token %}
+				<div class="form-group">
+					<label for="disabledSelect">
+						Código
+					</label>
+					<input class="form-control" id="disabledInput" value="{{entidad.codigo}}" disabled="" type="text">
+				</div>
+				<div class="form-group">
+					<label>
+						Nombre
+					</label>
+					<input class="form-control" id="id_nombre" maxlength="100" name="nombre" type="text" value="{{entidad.nombre}}">
+				</div>
+				<div class="form-group">
+					<label>
+						Tipo
+					</label>
+					<select class="form-control" id="id_tipo" name="tipo">
+						{% if 0t %}
+						<option value="0" selected="selected">Rector</option>
+						<option value="1">Departamental</option>
+						<option value="2">Municipal o Distrital</option>
+						<option value="3">Club</option>
+						<option value="4">Escuela</option>
+						<option value="5">Instituto</option>
+						{% elif 1t %}
+						<option value="0">Rector</option>
+						<option value="1" selected="selected">Departamental</option>
+						<option value="2">Municipal o Distrital</option>
+						<option value="3">Club</option>
+						<option value="4">Escuela</option>
+						<option value="5">Instituto</option>
+						{% elif 2t %}
+						<option value="0">Rector</option>
+						<option value="1">Departamental</option>
+						<option value="2" selected="selected">Municipal o Distrital</option>
+						<option value="3">Club</option>
+						<option value="4">Escuela</option>
+						<option value="5">Instituto</option>
+						{% elif 3t %}
+						<option value="0">Rector</option>
+						<option value="1">Departamental</option>
+						<option value="2">Municipal o Distrital</option>
+						<option value="3" selected="selected">Club</option>
+						<option value="4">Escuela</option>
+						<option value="5">Instituto</option>
+						{% elif 4t %}
+						<option value="0"Rector</option>
+						<option value="1">Departamental</option>
+						<option value="2">Municipal o Distrital</option>
+						<option value="3">Club</option>
+						<option value="4" selected="selected">Escuela</option>
+						<option value="5">Instituto</option>
+						{% else %}
+						<option value="0">Rector</option>
+						<option value="1">Departamental</option>
+						<option value="2">Municipal o Distrital</option>
+						<option value="3">Club</option>
+						<option value="4">Escuela</option>
+						<option value="5" selected="selected">Instituto</option>
+						{% endif %}
+					</select>
+				</div>
+				<div class="form-group">
+					<label>
+						Dedicación (Puede escoger más de una)
+					</label>
+					<div class="checkbox">
+						<label>
+							{% if 1d %}
+							<input type="checkbox" class="checkbox" id="id_escoger_dedicaciones_0" name="escoger_dedicaciones"value="Deporte" checked> Deporte
+							{% else %}
+							<input type="checkbox" class="checkbox" id="id_escoger_dedicaciones_0" name="escoger_dedicaciones"value="Deporte"> Deporte
+							{% endif %}
+						</label>
+					</div>
+					<div class="checkbox">
+						<label>
+							{% if 2d %}
+							<input type="checkbox" class="checkbox" id="id_escoger_dedicaciones_1" name="escoger_dedicaciones"value="Educación física" checked> Educación física
+							{% else %}
+							<input type="checkbox" class="checkbox" id="id_escoger_dedicaciones_1" name="escoger_dedicaciones"value="Educación física"> Educación física
+							{% endif %}
+						</label>
+					</div>
+					<div class="checkbox">
+						<label>
+							{% if 3d %}
+							<input type="checkbox" class="checkbox" id="id_escoger_dedicaciones_2" name="escoger_dedicaciones"value="Educación extraescolar" checked> Educación extraescolar
+							{% else %}
+							<input type="checkbox" class="checkbox" id="id_escoger_dedicaciones_2" name="escoger_dedicaciones"value="Educación extraescolar"> Educación extraescolar
+							{% endif %}
+						</label>
+					</div>
+					<div class="checkbox">
+						<label>
+							{% if 4d %}
+							<input type="checkbox" class="checkbox" id="id_escoger_dedicaciones_3" name="escoger_dedicaciones"value="Aprovechamiento del tiempo libre" checked> Aprovechamiento del tiempo libre
+							{% else %}
+							<input type="checkbox" class="checkbox" id="id_escoger_dedicaciones_3" name="escoger_dedicaciones"value="Aprovechamiento del tiempo libre"> Aprovechamiento del tiempo libre
+							{% endif %}
+						</label>
+					</div>
+					<div class="checkbox">
+						<label>
+							{% if 5d %}
+							<input type="checkbox" class="checkbox" id="id_escoger_dedicaciones_4" name="escoger_dedicaciones"value="Recreación" checked> Recreación
+							{% else %}
+							<input type="checkbox" class="checkbox" id="id_escoger_dedicaciones_4" name="escoger_dedicaciones"value="Recreación"> Recreación
+							{% endif %}
+						</label>
+					</div>
+				</div>
+				<div class="form-group">
+					<label>
+						Carácter económico
+					</label>
+					<select class="form-control" id="id_caracter_economico" name="caracter_economico">
+						{% if 1c %}
+						<option value="1" selected>Privada</option>
+						<option value="2">Pública</option>
+						<option value="3">Mixta</option>
+						{% elif 2c %}
+						<option value="1">Privada</option>
+						<option value="2" selected>Pública</option>
+						<option value="3">Mixta</option>
+						{% else %}
+						<option value="1">Privada</option>
+						<option value="2">Pública</option>
+						<option value="3" selected>Mixta</option>
+						{% endif %}
+					</select>
+				</div>
+				<div class="form-group">
+					<label>
+						Teléfono
+					</label>
+					<input class="form-control" id="id_telefono" name="telefono" value="{{entidad.telefono}}">
+				</div>
+				<div class="form-group">
+					<label>
+						Correo electrónico
+					</label>
+					<input class="form-control" id="id_correo" name="correo" value="{{entidad.correo}}" maxlength="254">
+				</div>
+				<!--
+				<div class="form-group">
+					<label>
+						Departamento
+					</label>
+					<select class="form-control" id="id_departamento" name="departamento">
+					{{datos_ubicacion.departamentos}}
+					</select>
+				</div>
+				-->
+				<div class="form-group">
+					<label>
+						Dirección
+					</label>
+					<input class="form-control" id="id_direccion" name="direccion" value="{{entidad.direccion}}">
+				</div>
+				<div class="form-group">
+					<label>
+						Número de identificación del representante legal
+					</label>
+					<input class="form-control" id="id_cc_representante_legal" name="cc_representante_legal" value="{{entidad.cc_representante_legal}}">
+				</div>
+				<div class="form-group">
+					<label>
+						Nombre completo del representante legal
+					</label>
+					<input class="form-control" id="id_nombre_representante_legal" name="nombre_representante_legal" value="{{entidad.nombre_representante_legal}}">
+				</div>
+				<button type="submit" class="btn btn-primary btn-lg btn-block">Guardar cambios</button>
+			</form>
+		</div>
+	</div>
+{% endblock %}

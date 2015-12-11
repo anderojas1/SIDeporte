@@ -1,0 +1,25 @@
+{% extends "startbootstrap/pages/index.html" %}
+
+{% block title %}
+Borrar entidad {{id_entidad}}
+{% endblock %}
+
+{% block title_content %}
+Borrar entidad {{entidad.nombre}}
+{% endblock %}
+
+{% block content %}
+	<div class="panel panel-danger">
+		<div class="panel-heading">
+			<i class="fa fa-hacker-news fa-fw"> </i>
+			Borrar {{entidad.nombre}}
+		</div>
+		<div class="panel-body">
+			<form action="" method="post">
+			{% csrf_token %}
+    			<p>¿Realmente desea eliminar la noticia "{{entidad.nombre}}"?</p>
+    			<button class= "btn btn-danger" type="submit">Sí, eliminar</button>
+			</form>
+		</div>
+	</div>
+{% endblock %}
