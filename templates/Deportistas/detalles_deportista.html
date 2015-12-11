@@ -1,0 +1,27 @@
+{% extends "startbootstrap/pages/index.html" %}
+{% block title %}
+    deportista {{deportistas.nombre}}
+{% endblock %}
+
+{% block title_content %}
+{{deportistas.nombre}}
+{% endblock %}
+
+{% block content %}
+
+	<div class="panel panel-default">
+		<div class="panel-body">
+			Documento de Identidad: {{deportistas.doc_identidad}}<br>
+			Lugar de nacimiento: {{deportistas.lugar_nacim}}<br>
+			Fecha de nacimiento: {{deportistas.fecha_nacim}}<br>
+			Deporte que practica: {{deportistas.deporte}}<br>
+			Categoria del deportista: {{deportistas.categoria}}<br>
+			Ranking Nacional: {{deportistas.ranking_nacional}}<br>
+			Ranking Internacional: {{deportistas.ranking_internacional}}<br>
+			Entidad a la que esta asociado: {{deportistas.asociado_a}}<br>
+			Tipo de asociación con la entidad: {{deportistas.tipo_asociado}}<br>
+			Reconocimientos: {{deportistas.reconocimiento}}<br>
+			<a href="delete"><button class="btn btn-danger">Eliminar</button></a>
+		</div>
+	</div>
+{% endblock %}

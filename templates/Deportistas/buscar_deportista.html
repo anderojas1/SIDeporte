@@ -1,0 +1,29 @@
+{% extends "startbootstrap/pages/index.html" %}
+
+{% block title %}
+Búsqueda de Deportista
+{% endblock %}
+
+{% block title_content %}
+Deportistas
+{% endblock %}
+
+{% block content %}
+	
+	<div class="panel panel-primary">
+		<div class="panel-heading">
+			<i class="fa fa-hacker-news fa-fw"> </i>
+			Sección de Deportistas
+		</div>
+		<div class="panel-body">
+			{% for deportista in deportistas %}
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<i class="fa fa-angle-double-right fa-fw"></i>
+					<a href="{{deportista.get_absolute_url}}">{{deportista.nombre}}</a>
+				</div>
+			</div>
+			{% endfor %}
+		</div>
+	</div>
+{% endblock %}
