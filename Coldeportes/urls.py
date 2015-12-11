@@ -10,6 +10,7 @@ entidad_urls = patterns('',
 	url(r'^registrar$', RegistrarEntidad.as_view(), name='registrar_entidad'),
 	url(r'^ubicacion$', UbicacionEntidades.as_view(), name='ubicacion_entidades'),
 	url(r'^(?P<id_entidad>\w+)/delete$', BorrarEntidad.as_view(), name='borrar_entidad'),
+	url(r'^(?P<id_entidad>\w+)/update$', EditarEntidad.as_view(), name='borrar_entidad'),
 	url(r'^buscarmunicipios$', ajax_get_municipios, name='ajax_get_municipios'),
 )
 

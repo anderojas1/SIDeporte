@@ -36,8 +36,8 @@ class Dedicacion(models.Model):
 
 class Entidad(models.Model):
 
-	codigo						= models.CharField(max_length=30, primary_key=True)
-	nombre 						= models.CharField(max_length=30)
+	codigo						= models.CharField(max_length=200, primary_key=True)
+	nombre 						= models.CharField(max_length=200)
 	opt_tipo					= ((0, 'Rector'), (1, 'Departamental'), (2, 'Municipal o Distrital'), (3, 'Club'),(4, 'Escuela'),(5, 'Instituto'))
 	tipo 						= models.SmallIntegerField(choices=opt_tipo)
 	estado 						= models.BooleanField(default=True)
