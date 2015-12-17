@@ -115,8 +115,8 @@ class Escenarios(models.Model):
 		if len(kwargs) == 0:
 			self.estado = True
 			nombre_sin_espacio = self.nombre.replace(' ', '')
-			self.codigo = self.entidad.codigo + nombre_sin_espacio + self.actividad
-
+			actividad_sin_espacio = self.actividad.replace(' ', '')
+			self.codigo = self.entidad.codigo + nombre_sin_espacio + actividad_sin_espacio
 			return super(Escenarios, self).save(*args, **kwargs)
 		else:
 			return super(Escenarios, self).save(*args, **kwargs)
