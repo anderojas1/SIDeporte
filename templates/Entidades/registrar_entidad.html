@@ -30,6 +30,12 @@
 				</div>
 				<div class="form-group">
 					<label>
+						Nombre corto (Se usará para el acceso al sistema)
+					</label>
+					{{form_entidad.codigo}}
+				</div>
+				<div class="form-group">
+					<label>
 						Seleccione el tipo de entidad
 					</label>
 					{{form_entidad.tipo}}
@@ -111,7 +117,19 @@
 						Nombre completo del representante legal
 					</label>
 						{{form_entidad.nombre_representante_legal}}
-				</div>			
+				</div>
+				<div class="form-group">
+					<label>
+						Contraseña de acceso
+					</label>
+					<input class="form-control" id="id_password_1" name="password_1" placeholder="Ingrese la contraseña" type="password">
+				</div>
+				<div class="form-group">
+					<label>
+						Repita la contraseña de acceso
+					</label>
+					<input class="form-control" id="id_password_2" name="password_2" placeholder="Repita la contraseña" type="password">
+				</div>
 				<button type="submit" class="btn btn-primary btn-lg btn-block">Registrar Entidad</button>
 			</form>
 		</div>

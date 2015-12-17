@@ -1,7 +1,25 @@
 {% extends "startbootstrap/pages/index.html" %}
-
+{% load staticfiles %}
 {% block title %}
 Editar entidad {{id_entidad}}
+{% endblock %}
+
+{% block graphics_js %}
+	<script type="text/javascript" src="{% static 'js/match_dep_mun.js' %}"></script>
+	<script>
+      	window.onload() = function initialize() {
+	        var departamento = "{{dep_sel}}";
+	        var municipio = "{{mun_sel}}";
+	        var departamentos = [];
+	        for (var i = 0; i < {{datos_departamento}}.lenght; i++) {
+
+	        	departamentos.append({{datos_departamento}}[i])
+	        }
+	        var municipios = {{datos_municipio}};
+	        cargar_combo(departamento, municipio, departamentos, municipios);
+    	}
+    </script>
+
 {% endblock %}
 
 {% block title_content %}
@@ -160,16 +178,13 @@ Editar Entidad
 					</label>
 					<input class="form-control" id="id_correo" name="correo" value="{{entidad.correo}}" maxlength="254">
 				</div>
-				<!--
-				<div class="form-group">
+				<div class="form-group" id="departamento">
 					<label>
 						Departamento
 					</label>
-					<select class="form-control" id="id_departamento" name="departamento">
-					{{datos_ubicacion.departamentos}}
+					<select class="form-control" id="id_departamento" name="departamento" onload="initialize()">
 					</select>
 				</div>
-				-->
 				<div class="form-group">
 					<label>
 						Dirección
