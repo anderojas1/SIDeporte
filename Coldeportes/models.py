@@ -56,11 +56,6 @@ class Entidad(models.Model):
 
 	def save(self, *args, **kwargs):
 		if len(kwargs) == 0:
-
-			codigo = self.nombre.lower()+str(self.tipo)+str(self.caracter_economico)
-			codigo = codigo.replace(" ", "")
-			print (codigo)
-			self.codigo = codigo
 			self.estado = True
 
 			return super(Entidad, self).save(*args, **kwargs)
@@ -99,31 +94,52 @@ class DedicacionEntidad(models.Model):
 	dedicacion = models.ForeignKey(Dedicacion)
 
 class Escenarios(models.Model):
-	codigo 					= models.CharField(max_length=30, primary_key=True)
-	nombre 					= models.CharField(max_length=30)
+	codigo 					= models.CharField(max_length=200, primary_key=True)
+	nombre 					= models.CharField(max_length=400)
 	estado					= models.BooleanField(default=True)
-	departamento_ubicacion 	= models.CharField(max_length=30)	
-	municipio_ubicacion 	= models.CharField(max_length=30)
-	direccion_ubicacion		= models.CharField(max_length=30)
+	ubicacion				= models.ForeignKey(Ubicacion, null=True)
+	direccion				= models.CharField(max_length=50, null=True)
 	entidad 				= models.ForeignKey(Entidad)
+	tipo 					= models.OneToOneField(Dedicacion, null=True)
+	actividad				= models.CharField(max_length=100, null=True)
+	capacidad_publico		= models.BigIntegerField(default=0)
+	capacidad_deportistas	= models.IntegerField(default=0)
+	escala					= models.SmallIntegerField(default=0)
+	descripcion				= models.CharField(max_length=2000, default='')
 
 	def __str__(self):
 		return self.nombre
 
+
+	def save(self, *args, **kwargs):
+		if len(kwargs) == 0:
+			self.estado = True
+			nombre_sin_espacio = self.nombre.replace(' ', '')
+			self.codigo = self.entidad.codigo + nombre_sin_espacio + self.actividad
+
+			return super(Escenarios, self).save(*args, **kwargs)
+		else:
+			return super(Escenarios, self).save(*args, **kwargs)
+
 class Deportistas(models.Model):
+	opt_tipo_documento = ((0, 'Cédula de ciudadanía'), 
+						(1, 'Registro civil'),
+						(2,'Tarjeta de identidad'),
+						(3, 'Cédula de extranjería'))
 	nombre 					= models.CharField(max_length=30)
+	tipo_documento			= models.SmallIntegerField(choices=opt_tipo_documento, null=True)
 	doc_identidad 			= models.BigIntegerField(primary_key=True)
 	fecha_nacim				= models.DateField()
 	lugar_nacim				= models.CharField(max_length=20)
 	deporte					= models.CharField(max_length=20)
 	estado 					= models.BooleanField(default=True)
 	categoria				= models.CharField(max_length=10)
-	ranking_nacional		= models.CharField(max_length=10)
-	ranking_internacional	= models.CharField(max_length=10)
-	asociado_a				= models.CharField(max_length=10)
+	ranking_nacional		= models.IntegerField(null=True)
+	ranking_internacional	= models.IntegerField(null=True)
 	opt_tipo_asociado		= ((0, 'jugador con pase'), (1, 'jugador asociado con mensualidad'),(2,'jugador asociado con anualidad'))
 	tipo_asociado 			= models.SmallIntegerField(choices=opt_tipo_asociado)
-	reconocimiento			= models.CharField(max_length=60)
+	# reconocimiento			= models.CharField(max_length=0) ---> Esto es multivaluado
+	entidad 				= models.ForeignKey(Entidad, null=True)
 
 	def __str__(self):
 		return self.nombre

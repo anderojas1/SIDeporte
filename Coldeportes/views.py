@@ -82,31 +82,43 @@ class RegistrarEntidad(TemplateView):
 				# BUSCAR EN LA BD SI EL DEPARTAMENTO Y MUNICIPIO EXISTEN
 				ubicacion = Ubicacion.objects.get(departamento=departamento, municipio=municipio)
 
-				# REGISTRO DE LA ENTIDAD
-				self.form_registrar_entidad.save()
-				entidad = Entidad.objects.get(nombre=nombre)
+				# CAPTACIÓN DE LA CONTRASEÑA DE ACCESO
 
-				# ASIGNACIÓN DE UBICACIÓN
-				entidad.ubicacion = ubicacion
-				entidad.save(update_fields=['ubicacion'])
+				password_1 = request.POST['password_1']
+				password_2 = request.POST['password_2']
 
-				# REGISTRO DE DEDICACIONES (TANTAS COMO HAYA SELECCIONADO)
-				for dedicacion in self.form_registro_dedicacion.cleaned_data['escoger_dedicaciones']:
-					ded = Dedicacion.objects.get(dedicacion=dedicacion)
-					ded_ent = DedicacionEntidad(dedicacion=ded, entidad=entidad)
-					ded_ent.save()
+				if password_2 == password_1 and len(password_1) > 0:
 
-				# CREACIÓN DE USUARIO EN LA BASE DE DATOS
-				usuario = User.objects.create_user(username=entidad.correo, password=str(entidad.cc_representante_legal))
-				entidad.usuario = usuario
-				entidad.save(update_fields=['usuario'])
+					# REGISTRO DE LA ENTIDAD
+					self.form_registrar_entidad.save()
+					entidad = Entidad.objects.get(nombre=nombre)
 
-				# ASIGNACIÓN DE GRUPO EN LA BASE DE DATOS
-				grupo = Group.objects.get(name='entidad')
-				usuario.groups.add(grupo)
+					# ASIGNACIÓN DE UBICACIÓN
+					entidad.ubicacion = ubicacion
+					entidad.save(update_fields=['ubicacion'])
 
-				context['exito'] = 'La entidad ha sido registrada exitosamente'
-				return render(request, self.template_name, context)
+					# REGISTRO DE DEDICACIONES (TANTAS COMO HAYA SELECCIONADO)
+					for dedicacion in self.form_registro_dedicacion.cleaned_data['escoger_dedicaciones']:
+						ded = Dedicacion.objects.get(dedicacion=dedicacion)
+						ded_ent = DedicacionEntidad(dedicacion=ded, entidad=entidad)
+						ded_ent.save()
+
+					# CREACIÓN DE USUARIO EN LA BASE DE DATOS
+
+					usuario = User.objects.create_user(username=entidad.codigo, password=password_1)
+					entidad.usuario = usuario
+					entidad.save(update_fields=['usuario'])
+
+					# ASIGNACIÓN DE GRUPO EN LA BASE DE DATOS
+					grupo = Group.objects.get(name='entidad')
+					usuario.groups.add(grupo)
+
+					context['exito'] = 'La entidad ha sido registrada exitosamente'
+					return render(request, self.template_name, context)
+
+				else:
+					print("son nulos o no coinciden")
+					return render(request, self.template_name, context)
 			except ObjectDoesNotExist:
 
 				# SI NO EXISTE LA UBICACIÓN
@@ -172,11 +184,16 @@ class EditarEntidad(TemplateView):
 			context[str(dedicacion.id)+'d'] = dedicacion.id
 
 		departamentos = Ubicacion.objects.all().distinct('departamento').values('departamento')
+		lista_departamentos = []
+		for departamento in departamentos:
+			lista_departamentos.append(departamento['departamento'])
 		departamento_sel = entidad.ubicacion.departamento
 		municipios = Ubicacion.objects.filter(departamento=departamento_sel).values('municipio')
 		municipio_sel = entidad.ubicacion.municipio
-		datos_ubicacion = match_municipio_departamento(municipio_sel, departamento_sel, municipios, departamentos)
-		context['datos_ubicacion'] = datos_ubicacion
+		context['datos_departamento'] = lista_departamentos
+		context['datos_municipios'] = municipios
+		context['dep_sel'] = departamento_sel
+		context['mun_sel'] = municipio_sel
 
 		#print(context)
 
@@ -234,18 +251,25 @@ class DetallesDeportistas(TemplateView):
 
 class BuscarEntidades(TemplateView):
 	template_name = 'Entidades/buscar_entidades.html'
-	entidades = []
+	deportistas = []
 
 	def get_context_data(self, **kwargs):
 		context = super(BuscarEntidades, self).get_context_data(**kwargs)
-
-		self.entidades = Entidad.objects.filter(estado=True)
-		context['entidades'] = self.entidades
 
 		ver_grupo = InformacionUsuario()
 		grupo = ver_grupo.asignarGrupo(self.request.user)
 		context[grupo] = grupo
 
+		if grupo == 'coldeportes':
+			pass
+
+		else:
+
+			entidad = Entidad.objects.get(usuario=self.request.user)
+
+			self.deportistas = Deportistas.objects.filter(estado=True, entidad=entidad)
+			context['deportistas'] = self.deportistas
+		
 		return context
 
 class BorrarDeportistas(TemplateView):
@@ -276,11 +300,137 @@ class BuscarDeportistas(TemplateView):
 	def get_context_data(self, **kwargs):
 		context = super(BuscarDeportistas, self).get_context_data(**kwargs)
 
+		ver_grupo = InformacionUsuario()
+		grupo = ver_grupo.asignarGrupo(self.request.user)
+		context[grupo] = grupo
+
 		self.deportistas = Deportistas.objects.filter(estado=True)
 		context['deportistas'] = self.deportistas
 		print (self.deportistas)
 
 		return context
+
+class RegistrarDeportista(TemplateView):
+	template_name = 'Deportistas/registrar_deportista.html'
+	form_deportista = FormRegistroDeportista()
+
+	def get_context_data(self, **kwargs):
+		context = super(RegistrarDeportista, self).get_context_data(**kwargs)
+
+		ver_grupo = InformacionUsuario()
+		grupo = ver_grupo.asignarGrupo(self.request.user)
+		context[grupo] = grupo
+
+		context['form'] = self.form_deportista
+
+		return context
+
+
+class RegistrarEscenario(TemplateView):
+	template_name = 'escenarios/registrar_escenario.html'
+	form_escenario = FormRegistrarEscenario()
+	form_ubicacion = FormRegistroUbicacion()
+
+	def get_context_data(self, **kwargs):
+		context = super(RegistrarEscenario, self).get_context_data(**kwargs)
+
+		ver_grupo = InformacionUsuario()
+		grupo = ver_grupo.asignarGrupo(self.request.user)
+		context[grupo] = grupo
+
+		dedicaciones = Dedicacion.objects.all()
+
+		context['form'] = self.form_escenario
+		context['dedicaciones'] = dedicaciones
+		context['form_ubicacion'] = self.form_ubicacion
+
+		return context
+
+
+	def post(self, request, *args, **kwargs):
+		context = super(RegistrarEscenario, self).get_context_data(**kwargs)
+
+		ver_grupo = InformacionUsuario()
+		grupo = ver_grupo.asignarGrupo(self.request.user)
+		context[grupo] = grupo
+
+		self.form_escenario = FormRegistrarEscenario(request.POST)
+		municipio = request.POST['municipio']
+		departamento = request.POST['type']
+
+		if self.form_escenario.is_valid():
+			try:
+
+				# BUSCAR EN LA BD SI EL DEPARTAMENTO Y MUNICIPIO EXISTEN
+				ubicacion = Ubicacion.objects.get(departamento=departamento, municipio=municipio)
+
+				if grupo == 'coldeportes':
+					pass
+
+				else:
+					entidad = Entidad.objects.get(usuario=self.request.user)
+
+					print(request.POST)
+
+					nombre = request.POST['nombre']
+					direccion = request.POST['direccion']
+					actividad = request.POST['actividad']
+
+					dedicacion = Dedicacion.objects.get(id=request.POST['dedicacion'])
+
+					capacidad_e = request.POST['capacidad_publico']
+					capacidad_d = request.POST['capacidad_deportistas']
+					escala = request.POST['escala']
+
+					escenario = Escenarios(nombre=nombre, direccion=direccion, actividad=actividad,
+						tipo=dedicacion, capacidad_publico=capacidad_e, capacidad_deportistas=capacidad_d,
+						escala=escala, entidad=entidad)
+
+					escenario.save()
+
+					escenario.ubicacion = ubicacion
+					escenario.save(update_fields=['ubicacion'])
+
+					context['exito_escenario_nombre'] = 'el escenario ' + nombre
+
+				context['exito_escenario'] = ' ha sido registrado el escenario exitosamente'
+
+				return render (request, self.template_name, context)
+
+			# SI NO EXISTE EL DEPARTAMENTO Y EL MUNICIPIO
+			except ObjectDoesNotExist:
+
+				# CARGAR NUEVAMENTE LOS FORMULARIOS
+				self.form_escenario = FormRegistrarEscenario()
+				self.form_ubicacion = FormRegistroUbicacion()
+				context['form'] = self.form_escenario
+				context['form_ubicacion'] = self.form_ubicacion
+
+				# CARGAR INFORMACIÓN DEL ERROR
+				context['error_ubicacion'] = 'Por favor seleccione un departamento y un municipio válidos'
+
+				dedicaciones = Dedicacion.objects.all()
+				context['dedicaciones'] = dedicaciones
+
+				return render(request, self.template_name, context)
+
+		# SI EL FORMULARIO NO ESTÁ COMPLETO
+		else:
+
+			# CARGAR NUEVAMENTE LOS FORMULARIOS
+			self.form_escenario = FormRegistrarEscenario()
+			self.form_ubicacion = FormRegistroUbicacion()
+			context['form'] = self.form_escenario
+			context['form_ubicacion'] = self.form_ubicacion
+
+			# CARGAR INFORMACIÓN DEL ERROR
+			context['error'] = 'Todos los campos son requeridos'
+
+			dedicaciones = Dedicacion.objects.all()
+			context['dedicaciones'] = dedicaciones
+
+			return render(request, self.template_name, context)
+
 
 @csrf_exempt
 def ajax_get_municipios(request):
