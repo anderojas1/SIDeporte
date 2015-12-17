@@ -40,6 +40,7 @@ INSTALLED_APPS = (
     'noticias',
     'Coldeportes',
     'reportes',
+    'datetimewidget',
 )
 
 MIDDLEWARE_CLASSES = (
