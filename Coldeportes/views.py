@@ -1,4 +1,5 @@
 from django.shortcuts import render, render_to_response, redirect
+from django.core.urlresolvers import reverse
 from django.views.generic import TemplateView
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.csrf import ensure_csrf_cookie
@@ -202,7 +203,10 @@ class EditarEntidad(TemplateView):
 	def post(self, request, *args, **kwargs):
 		context = super(EditarEntidad, self).get_context_data(**kwargs)
 
-		print (request.POST)
+		# CARGAR INFORMACIÓN DE USUARIO ACTUAL
+		ver_grupo = InformacionUsuario()
+		grupo = ver_grupo.asignarGrupo(self.request.user)
+		context[grupo] = grupo
 
 		# CODIGO EN BASE DE DATOS
 		entidad = Entidad.objects.get(codigo=kwargs['id_entidad'])
@@ -375,6 +379,7 @@ class RegistrarEscenario(TemplateView):
 					nombre = request.POST['nombre']
 					direccion = request.POST['direccion']
 					actividad = request.POST['actividad']
+					descripcion = request.POST['descripcion']
 
 					dedicacion = Dedicacion.objects.get(id=request.POST['dedicacion'])
 
@@ -382,9 +387,9 @@ class RegistrarEscenario(TemplateView):
 					capacidad_d = request.POST['capacidad_deportistas']
 					escala = request.POST['escala']
 
-					escenario = Escenarios(nombre=nombre, direccion=direccion, actividad=actividad,
-						tipo=dedicacion, capacidad_publico=capacidad_e, capacidad_deportistas=capacidad_d,
-						escala=escala, entidad=entidad)
+					escenario = Escenarios(nombre=nombre, direccion=direccion, actividad=actividad, 
+						descripcion=descripcion, tipo=dedicacion, capacidad_publico=capacidad_e, 
+						capacidad_deportistas=capacidad_d, escala=escala, entidad=entidad)
 
 					escenario.save()
 
@@ -430,6 +435,166 @@ class RegistrarEscenario(TemplateView):
 			context['dedicaciones'] = dedicaciones
 
 			return render(request, self.template_name, context)
+
+
+class DetallesEscenario(TemplateView):
+	template_name = "escenarios/detalles_escenario.html"
+
+	def get_context_data(self, **kwargs):
+		context = super(DetallesEscenario, self).get_context_data(**kwargs)
+		print(kwargs)
+
+		# CARGAR DATOS DE ESCENARIO
+		escenario = Escenarios.objects.get(codigo=kwargs['id_escenario'])
+		context['escenario'] = escenario
+
+		# CARGAR INFORMACIÓN DE USUARIO
+		ver_grupo = InformacionUsuario()
+		grupo = ver_grupo.asignarGrupo(self.request.user)
+		context[grupo] = grupo
+
+		entidad_consulta = Entidad.objects.get(usuario=self.request.user)
+
+		if escenario.entidad == entidad_consulta:
+			context['puede_editar'] = True
+
+		current_url = self.request.resolver_match.url_name
+		print(current_url)
+
+		if current_url.find('success'):
+			context['editado'] = 'Se han actualizado exitosamente los datos del escenario: ' + escenario.nombre
+
+		return context
+
+class BorrarEscenario(TemplateView):
+	template_name = 'escenarios/borrar_escenario.html'
+
+	def get_context_data(self, **kwargs):
+		context = super(BorrarEscenario, self).get_context_data(**kwargs)
+
+		escenario = Escenarios.objects.get(codigo=kwargs['id_escenario'])
+		context['escenario'] = escenario
+
+		ver_grupo = InformacionUsuario()
+		grupo = ver_grupo.asignarGrupo(self.request.user)
+		context[grupo] = grupo
+
+		return context
+
+	def post(self, request, *args, **kwargs):
+		context = super(BorrarEscenario, self).get_context_data(**kwargs)
+
+		escenario = Escenarios.objects.get(codigo=kwargs['id_escenario'])
+		escenario.estado = False
+		escenario.save(update_fields=['estado'])
+		context['borra_escenario'] = 'Se ha borrado el escenario exitosamente'
+
+		ver_grupo = InformacionUsuario()
+		grupo = ver_grupo.asignarGrupo(self.request.user)
+		context[grupo] = grupo
+
+		return render(request, 'escenarios/buscar_escenarios.html', context)
+
+class EditarEscenario(TemplateView):
+	template_name = 'escenarios/editar_escenario.html'
+
+	def cargar_informacion(self, context, escenario):
+
+		# CARGAR ESCALA NUMÉRICA DE CALIFICACIÓN DEL ESTADO DEL ESCENARIO
+		listado_escala = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+		context['listado_escala'] = listado_escala
+
+		# CARGAR TIPO DE ACTIVIDAD
+		dedicaciones = Dedicacion.objects.all()
+		context['dedicaciones'] = dedicaciones
+
+		# CARGAR DEPARTAMENTOS
+		departamentos = Ubicacion.objects.all().distinct('departamento').values('departamento')
+		context['departamentos'] = departamentos
+
+		# CARGAR MUNICIPIOS
+		municipios = Ubicacion.objects.filter(departamento=escenario.ubicacion.departamento).values('municipio')
+		context['municipios'] = municipios
+
+	def get_context_data(self, **kwargs):
+		context = super(EditarEscenario, self).get_context_data(**kwargs)
+
+		# CARGAR INFORMACIÓN DEL ESCENARIO
+		escenario = Escenarios.objects.get(codigo=kwargs['id_escenario'])
+		context['escenario'] = escenario
+
+		self.cargar_informacion(context, escenario)
+
+		# CARGAR INFORMACIÓN DE USUARIO ACTUAL
+		ver_grupo = InformacionUsuario()
+		grupo = ver_grupo.asignarGrupo(self.request.user)
+		context[grupo] = grupo
+
+		return context
+
+	def post(self, request, *args, **kwargs):
+		context = super(EditarEscenario, self).get_context_data(**kwargs)
+
+		# CARGAR INFORMACIÓN DE USUARIO ACTUAL
+		ver_grupo = InformacionUsuario()
+		grupo = ver_grupo.asignarGrupo(self.request.user)
+		context[grupo] = grupo
+
+		escenario = Escenarios.objects.get(codigo=kwargs['id_escenario'])
+		context['escenario'] = escenario
+
+		departamento = request.POST['type']
+		municipio = request.POST['municipio']
+
+		try:
+
+			# OBTENER LA UBICACIÓN
+			ubicacion = Ubicacion.objects.get(departamento=departamento, municipio=municipio)
+
+			# OBTENER TODOS LOS CAMPOS EDITABLES
+			nombre = request.POST['nombre']
+			direccion = request.POST['direccion']
+			actividad = request.POST['actividad']
+			capacidad_e = request.POST['capacidad_publico']
+			descripcion = request.POST['descripcion']
+			capacidad_d = request.POST['capacidad_deportistas']
+			escala = request.POST['escala']
+			dedicacion = Dedicacion.objects.get(id=request.POST['dedicacion'])
+
+			# SI FALTA ALGUNA INFORMACIÓN: CAMPOS VACÍOS
+			if not nombre or not direccion or not actividad or not capacidad_d or not capacidad_e or not descripcion:
+				
+				pass
+
+			else:
+
+				escenario.nombre = nombre
+				escenario.direccion = direccion
+				escenario.actividad = actividad
+				escenario.capacidad_publico = capacidad_e
+				escenario.capacidad_deportistas = capacidad_d
+				escenario.descripcion = descripcion
+				escenario.escala = escala
+				escenario.tipo = dedicacion
+				escenario.ubicacion = ubicacion
+
+				escenario.save(update_fields=['nombre', 'direccion', 'actividad', 'capacidad_publico', 'ubicacion',
+					'capacidad_deportistas', 'descripcion', 'escala', 'tipo'])
+
+				edit = 'Se han actualizado exitosamente los datos del escenario: ' + escenario.nombre
+
+				return redirect("/coldeportes/escenarios/" + kwargs['id_escenario'] + '/update/success',
+					edit)
+
+		except ObjectDoesNotExist:
+			context['error'] = 'Por favor ingrese un mmunicipio y departamento válidos'
+
+			self.cargar_informacion(context, escenario)
+
+			return render(request, self.template_name, context)
+
+
+		return render(request, self.template_name, context)
 
 
 @csrf_exempt

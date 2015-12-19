@@ -105,7 +105,7 @@ class Escenarios(models.Model):
 	capacidad_publico		= models.BigIntegerField(default=0)
 	capacidad_deportistas	= models.IntegerField(default=0)
 	escala					= models.SmallIntegerField(default=0)
-	descripcion				= models.CharField(max_length=2000, default='')
+	descripcion				= models.CharField(max_length=2000, null=True)
 
 	def __str__(self):
 		return self.nombre
@@ -120,6 +120,10 @@ class Escenarios(models.Model):
 			return super(Escenarios, self).save(*args, **kwargs)
 		else:
 			return super(Escenarios, self).save(*args, **kwargs)
+
+	@models.permalink
+	def get_absolute_url(self):
+		return ("detalles_escenario", [self.codigo])
 
 class Deportistas(models.Model):
 	opt_tipo_documento = ((0, 'Cédula de ciudadanía'), 

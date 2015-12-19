@@ -23,6 +23,10 @@ deportistas_urls = patterns('',
 
 escenarios_urls = patterns ('',
 	url(r'^registrar$', RegistrarEscenario.as_view(), name='registrar_escenario'),
+	url(r'^(?P<id_escenario>\w+)/$', DetallesEscenario.as_view(), name='detalles_escenario'),
+	url(r'^(?P<id_escenario>\w+)/delete$', BorrarEscenario.as_view(), name='borrar_escenario'),
+	url(r'^(?P<id_escenario>\w+)/update$', EditarEscenario.as_view(), name='editar_escenario'),
+	url(r'^(?P<id_escenario>\w+)/update/success$', DetallesEscenario.as_view(), name='editado_escenario'),
 )
 
 urlpatterns =  patterns ('',
