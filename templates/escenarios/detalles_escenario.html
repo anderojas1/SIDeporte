@@ -1,0 +1,145 @@
+{% extends "startbootstrap/pages/index.html" %}
+{% load staticfiles %}
+{% block title %}
+    Escenario {{escenario.nombre}}
+{% endblock %}
+
+{% block title_content %}
+{{escenario.nombre}}
+{% endblock %}
+
+{% block content %}
+	<div class="panel panel-default">
+		<div class="panel-heading">
+			<h2>
+				<p class="text-primary">
+					<strong>{{escenario.nombre}}</strong>
+				</p>	
+			</h2>
+		</div>
+		<div class="panel-body">
+			{% if editado %}
+                <h2>
+                    <small>
+                        <p class="text-success">
+                            {{editado}}
+                        </p>
+                    </small>
+                </h2>
+                <br>
+            {% endif %}
+			<div class="dataTable_wrapper">
+            	<div class="row">
+            		<div class="col-sm-12">
+            			<table aria-describedby="dataTables-example_info" role="grid" class="table table-striped table-bordered table-hover dataTable no-footer" id="dataTables-example">
+                            <tbody>
+                            	<tr>
+                                    <td>
+                                    	<strong>Nombre</strong>
+                                    </td>
+                                    <td>
+                                    	{{escenario.nombre}}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                    	<strong>Dedicación</strong>
+                                    </td>
+                                    <td>
+                                    	{{escenario.tipo.dedicacion}}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                    	<strong>Deporte practicado</strong>
+                                    </td>
+                                    <td>
+                                    	{{escenario.actividad}}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <strong>Descripción</strong>
+                                    </td>
+                                    <td>
+                                        {{escenario.descripcion}}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <strong>Dirección</strong>
+                                    </td>
+                                    <td>
+                                        {{escenario.direccion}}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <strong>Ciudad/Municipio</strong>
+                                    </td>
+                                    <td>
+                                        {{escenario.ubicacion.get_municipio}}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <strong>Departamento</strong>
+                                    </td>
+                                    <td>
+                                        {{escenario.ubicacion.get_departamento}}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                    	<strong>Capacidad de público</strong>
+                                    </td>
+                                    <td>
+                                    	{{escenario.capacidad_publico}} personas
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                    	<strong>Capacidad de deportistas</strong>
+                                    </td>
+                                    <td>
+                                    	{{escenario.capacidad_deportistas}} deportistas
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                    	<strong>Estado del escenario (del 1 al 10)</strong>
+                                    </td>
+                                    <td>
+                                    	{{escenario.escala}}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                    	<strong>Entidad responsable a cargo</strong>
+                                    </td>
+                                    <td>
+                                    	{{escenario.entidad.nombre}} ({{escenario.entidad.codigo}})
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+        	</div>
+			{% if coldeportes or puede_editar %}
+			<div class="row">
+				<div class="col-sm-6">
+					<a href="/coldeportes/escenarios/{{id_escenario}}/update">
+						<button type="button" class="btn btn-warning btn-lg btn-block">Editar</button>
+					</a>				
+				</div>
+				<div class="col-sm-6">
+					<a href="/coldeportes/escenarios/{{id_escenario}}/delete">	
+						<button type="button" class="btn btn-danger btn-lg btn-block">Borrar</button>
+					</a>					
+				</div>				
+			</div>
+			{% endif %}
+		</div>
+	</div>
+{% endblock %}

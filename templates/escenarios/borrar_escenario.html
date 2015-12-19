@@ -1,0 +1,25 @@
+{% extends "startbootstrap/pages/index.html" %}
+
+{% block title %}
+Borrar escenario {{escenario.nombre}}
+{% endblock %}
+
+{% block title_content %}
+Borrar escenario {{escenario.nombre}}
+{% endblock %}
+
+{% block content %}
+	<div class="panel panel-danger">
+		<div class="panel-heading">
+			<i class="fa fa-hacker-news fa-fw"> </i>
+			Borrar {{escenario.nombre}}
+		</div>
+		<div class="panel-body">
+			<form action="" method="post">
+			{% csrf_token %}
+    			<p>¿Realmente desea eliminar el escenario "{{escenario.nombre}}"?</p>
+    			<button class= "btn btn-danger" type="submit">Sí, eliminar</button>
+			</form>
+		</div>
+	</div>
+{% endblock %}

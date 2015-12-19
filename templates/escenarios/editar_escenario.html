@@ -1,0 +1,131 @@
+{% extends "startbootstrap/pages/index.html" %}
+{% load staticfiles %}
+{% block title %}
+Editar entidad {{id_entidad}}
+{% endblock %}
+
+{% block title_content %}
+Editar Entidad
+{% endblock %}
+{% block content %}
+	<div class="panel panel-default">
+		<div class="panel-heading">
+			<i class="fa fa-hacker-news fa-fw"> </i>
+			Entidad {{entidad.nombre}}
+		</div>
+		<div class="panel-body">
+			{% if error %}
+				<div class="alert alert-success">
+					{{error}}
+				</div>
+			{% endif %}
+			<form role="form" method="POST">
+			{% csrf_token %}
+			<div class="form-group">
+					<label for="disabledInput">
+						Código
+					</label>
+					<input class="form-control" id="disabledInput" value="{{escenario.codigo}}" disabled="" type="text">
+				</div>
+				<div class="form-group">
+					<label>
+						Nombre
+					</label>
+					<input class="form-control" id="id_nombre" value="{{escenario.nombre}}" name="nombre" type="text">
+				</div>
+				<div class="form-group">
+					<label>
+						Deporte o actividad practicado
+					</label>
+					<input class="form-control" id="id_actividad" value="{{escenario.actividad}}" name="actividad" type="text">
+				</div>
+				<div class="form-group">
+					<label>
+						Estado (Escoja de 1 a 10 de mal estado a buen estado)
+					</label>
+					<select class="form-control" id="id_escala" name="escala">
+					{% for lista in listado_escala %}
+						{% if lista == escenario.escala %}
+						<option value="{{lista}}" selected>{{lista}}</option>
+						{% else %}
+						<option value="{{lista}}">{{lista}}</option>
+						{% endif %}
+					{% endfor %}
+					</select>
+				</div>
+				<div class="form-group">
+					<label>
+						Dedicación
+					</label>
+					<select id="id_dedicacion" class="form-control" name="dedicacion">
+					{% for dedicacion in dedicaciones %}
+						{% if dedicacion == escenario.tipo %}
+						<option value="{{dedicacion.id}}" selected>{{dedicacion.dedicacion}}</option>
+						{% else %}
+						<option value="{{dedicacion.id}}">{{dedicacion.dedicacion}}</option>
+						{% endif %}
+					{% endfor %}
+					</select>
+				</div>
+				<div class="form-group">
+					<label>
+						Descripción
+					</label>
+					<textarea class="form-control" id="id_descripcion", name="descripcion", rows="4" type="text">{{escenario.descripcion}}</textarea>
+				</div>
+				<div class="form-group">
+					<label>
+						Capacidad de público
+					</label>
+					<input class="form-control" id="id_capacidad_publico" value="{{escenario.capacidad_publico}}" name="capacidad_publico" type="number">
+				</div>
+				<div class="form-group">
+					<label>
+						Capacidad de deportistas en entrenamiento
+					</label>
+					<input class="form-control" id="id_capacidad_deportistas" value="{{escenario.capacidad_deportistas}}" name="capacidad_deportistas" type="number">
+				</div>
+				<div class="form-group">
+					<label>
+						Departamento
+					</label>
+					<select id="id_type" class="form-control" name="type" onchange="get_municipios()">
+					{% for departamento in departamentos %}
+						{% if departamento.departamento == escenario.ubicacion.departamento %}
+						<option value="{{departamento.departamento}}" selected>{{departamento.departamento}}</option>
+						{% else %}
+						<option value="{{departamento.departamento}}">{{departamento.departamento}}</option>
+						{% endif %}
+					{% endfor %}
+					</select>
+				</div>
+				<div class="form-group">
+					<label>
+						Municipio
+					</label>
+					<select id="id_municipio" class="form-control" name="municipio">
+					{% for municipio in municipios %}
+						{% if municipio.municipio == escenario.ubicacion.municipio %}
+						<option value="{{municipio.municipio}}" selected>{{municipio.municipio}}</option>
+						{% else %}
+						<option value="{{municipio.municipio}}">{{municipio.municipio}}</option>
+						{% endif %}
+					{% endfor %}
+					</select>
+				</div>
+				<div class="form-group">
+					<label>
+						Dirección
+					</label>
+					<input class="form-control" id="id_direccion" value="{{escenario.direccion}}" name="direccion" type="text">
+				</div>
+				<button type="submit" class="btn btn-primary btn-lg btn-block">Actualizar datos del escenario</button>
+			</form>
+		</div>
+	</div>
+{% endblock %}
+
+{% block graphics_js %}
+	<script type="text/javascript" src="{% static 'js/prototype.js' %}"></script>
+	<script type="text/javascript" src="{% static 'js/ubicaciones.js' %}"></script>
+{% endblock %}
