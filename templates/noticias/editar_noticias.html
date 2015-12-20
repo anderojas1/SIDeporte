@@ -29,12 +29,6 @@ Editar Noticia
 					<input class="form-control" id="id_titulo" maxlength="100" name="titulo" type="text" value="{{noticia.titulo}}">
 				</div>
 				<div class="form-group">
-					<label for="disabledSelect">
-						Fecha de creación
-					</label>
-					<input class="form-control" id="disabledInput" value="{{noticia.fecha}}" disabled="" type="text">
-				</div>
-				<div class="form-group">
 					<label>
 						Contenido
 					</label>
@@ -46,7 +40,19 @@ Editar Noticia
 					</label>
 					<input type="file" id="id_imagen" name="imagen">
 				</div>
-				<button type="submit" class="btn btn-primary btn-lg btn-block">Enviar Noticia</button>
+				<div class="form-group">
+					<label for="disabledSelect">
+						Fecha de creación
+					</label>
+					<input class="form-control" id="disabledInput" value="{{noticia.fecha}}" disabled="" type="text">
+				</div>
+				<div class="form-group">
+					<label for="disabledSelect">
+						Entidad que publica
+					</label>
+					<input class="form-control" id="disabledInput" value="{{noticia.entidad.nombre}}" disabled="" type="text">
+				</div>
+				<button type="submit" class="btn btn-primary btn-lg btn-block">Actualizar Noticia</button>
 			</form>
 		</div>
 	</div>

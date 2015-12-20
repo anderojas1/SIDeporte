@@ -25,6 +25,8 @@
 			{% endif %}
 			Fecha de publicación: {{noticia.fecha}}<br>
 			<hr>
+			Publicado por: {{noticia.entidad.nombre}} ({{noticia.entidad.codigo}})<br>
+			<hr>
 			<center>
 				<img src="../../imagenes/{{ MEDIA_URL}}{{noticia.imagen}}" alt="{{noticia.titulo}}" />
 			</center>
