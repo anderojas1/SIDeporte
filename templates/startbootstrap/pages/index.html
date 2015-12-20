@@ -243,7 +243,7 @@ Inicio
                                 </span>
                             </a>
                             <ul class="nav nav-second-level">
-                                {% if coldeportes %}
+                                {% if coldeportes or entidad %}
                                     <li>
                                         <a href="/noticias/registrar">Registrar noticia</a>
                                     </li>
@@ -287,7 +287,7 @@ Inicio
                                     <a href="#">Escenarios<span class="fa arrow"></span></a>
                                     <ul class="nav nav-third-level">
                                         <li>
-                                            <a href="#">Ver escenarios</a>
+                                            <a href="/coldeportes/escenarios/listar">Ver escenarios</a>
                                         </li>
                                         <li>
                                             <a href="/coldeportes/escenarios/registrar">Registrar escenario</a>
