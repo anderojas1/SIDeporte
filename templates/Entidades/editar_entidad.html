@@ -4,24 +4,6 @@
 Editar entidad {{id_entidad}}
 {% endblock %}
 
-{% block graphics_js %}
-	<script type="text/javascript" src="{% static 'js/match_dep_mun.js' %}"></script>
-	<script>
-      	window.onload() = function initialize() {
-	        var departamento = "{{dep_sel}}";
-	        var municipio = "{{mun_sel}}";
-	        var departamentos = [];
-	        for (var i = 0; i < {{datos_departamento}}.lenght; i++) {
-
-	        	departamentos.append({{datos_departamento}}[i])
-	        }
-	        var municipios = {{datos_municipio}};
-	        cargar_combo(departamento, municipio, departamentos, municipios);
-    	}
-    </script>
-
-{% endblock %}
-
 {% block title_content %}
 Editar Entidad
 {% endblock %}
@@ -34,6 +16,11 @@ Editar Entidad
 		<div class="panel-body">
 			<form role="form" method="post" enctype="multipart/form-data" id="form">
 				{% csrf_token %}
+				{% if error_dedicacion %}
+					<div class="alert alert-danger">
+					{{error_dedicacion}}
+		            </div>
+		        {% endif %}
 				<div class="form-group">
 					<label for="disabledSelect">
 						Código
@@ -51,49 +38,13 @@ Editar Entidad
 						Tipo
 					</label>
 					<select class="form-control" id="id_tipo" name="tipo">
-						{% if 0t %}
-						<option value="0" selected="selected">Rector</option>
-						<option value="1">Departamental</option>
-						<option value="2">Municipal o Distrital</option>
-						<option value="3">Club</option>
-						<option value="4">Escuela</option>
-						<option value="5">Instituto</option>
-						{% elif 1t %}
-						<option value="0">Rector</option>
-						<option value="1" selected="selected">Departamental</option>
-						<option value="2">Municipal o Distrital</option>
-						<option value="3">Club</option>
-						<option value="4">Escuela</option>
-						<option value="5">Instituto</option>
-						{% elif 2t %}
-						<option value="0">Rector</option>
-						<option value="1">Departamental</option>
-						<option value="2" selected="selected">Municipal o Distrital</option>
-						<option value="3">Club</option>
-						<option value="4">Escuela</option>
-						<option value="5">Instituto</option>
-						{% elif 3t %}
-						<option value="0">Rector</option>
-						<option value="1">Departamental</option>
-						<option value="2">Municipal o Distrital</option>
-						<option value="3" selected="selected">Club</option>
-						<option value="4">Escuela</option>
-						<option value="5">Instituto</option>
-						{% elif 4t %}
-						<option value="0"Rector</option>
-						<option value="1">Departamental</option>
-						<option value="2">Municipal o Distrital</option>
-						<option value="3">Club</option>
-						<option value="4" selected="selected">Escuela</option>
-						<option value="5">Instituto</option>
-						{% else %}
-						<option value="0">Rector</option>
-						<option value="1">Departamental</option>
-						<option value="2">Municipal o Distrital</option>
-						<option value="3">Club</option>
-						<option value="4">Escuela</option>
-						<option value="5" selected="selected">Instituto</option>
-						{% endif %}
+						{% for tipo in tipos %}
+							{% if tipo.0 == entidad.tipo %}
+								<option value="{{tipo.0}}" selected>{{tipo.1}}</option>
+							{% else %}
+								<option value="{{tipo.0}}">{{tipo.1}}</option>
+							{% endif %}
+						{% endfor %}
 					</select>
 				</div>
 				<div class="form-group">
@@ -178,11 +129,32 @@ Editar Entidad
 					</label>
 					<input class="form-control" id="id_correo" name="correo" value="{{entidad.correo}}" maxlength="254">
 				</div>
-				<div class="form-group" id="departamento">
+				<div class="form-group">
 					<label>
 						Departamento
 					</label>
-					<select class="form-control" id="id_departamento" name="departamento" onload="initialize()">
+					<select id="id_type" class="form-control" name="type" onchange="get_municipios()">
+					{% for departamento in departamentos %}
+						{% if departamento.departamento == entidad.ubicacion.departamento %}
+						<option value="{{departamento.departamento}}" selected>{{departamento.departamento}}</option>
+						{% else %}
+						<option value="{{departamento.departamento}}">{{departamento.departamento}}</option>
+						{% endif %}
+					{% endfor %}
+					</select>
+				</div>
+				<div class="form-group">
+					<label>
+						Municipio
+					</label>
+					<select id="id_municipio" class="form-control" name="municipio">
+					{% for municipio in municipios %}
+						{% if municipio.municipio == entidad.ubicacion.municipio %}
+						<option value="{{municipio.municipio}}" selected>{{municipio.municipio}}</option>
+						{% else %}
+						<option value="{{municipio.municipio}}">{{municipio.municipio}}</option>
+						{% endif %}
+					{% endfor %}
 					</select>
 				</div>
 				<div class="form-group">
@@ -207,4 +179,8 @@ Editar Entidad
 			</form>
 		</div>
 	</div>
+{% endblock %}
+{% block graphics_js %}
+	<script type="text/javascript" src="{% static 'js/prototype.js' %}"></script>
+	<script type="text/javascript" src="{% static 'js/ubicaciones.js' %}"></script>
 {% endblock %}
