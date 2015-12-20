@@ -1,0 +1,59 @@
+{% extends "startbootstrap/pages/index.html" %}
+{% block title %}
+Escenarios
+{% endblock %}
+{% block title_content %}
+Escenarios registrados
+{% endblock %}
+{% block content %}
+	
+	<div class="panel panel-primary">
+        <div class="panel-heading">
+            Listado de escenarios
+        </div>
+    	<!-- /.panel-heading -->
+        <div class="panel-body">
+            <div class="dataTable_wrapper">
+            	<div class="row">
+            		<div class="col-sm-12">
+            			<table aria-describedby="dataTables-example_info" role="grid" class="table table-striped table-bordered table-hover dataTable no-footer" id="dataTables-example">
+                    		<thead>
+                                <tr role="row">
+                                	<th>
+                                        Nombre
+                                	</th>
+                                	<th>
+                                        Actividad realizada
+                                    </th>
+                                    <th>
+                                        Ubicación
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            	{% for escenario in escenarios %}
+                            	<tr role="row" class="gradeA odd">
+                                    <td class="sorting_1">
+                                    	<a href="{{escenario.get_absolute_url}}">
+                                    		{{escenario.nombre}}
+                                    	</a>
+                                    <td>
+                                    	{{escenario.actividad}}
+                                    </td>
+                                    <td>
+                                        {{escenario.ubicacion.get_municipio}},{{escenario.ubicacion.get_departamento}}
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+        	</div>
+        </div>
+            <!-- /.table-responsive -->
+                <!-- /.panel-body -->
+    </div>
+    <!-- /.panel -->
+
+{% endblock %}
