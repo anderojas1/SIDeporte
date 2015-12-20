@@ -161,6 +161,33 @@ class BorrarEntidad(TemplateView):
 
 class EditarEntidad(TemplateView):
 	template_name = 'Entidades/editar_entidad.html'
+
+	def cargar_contenido (self, entidad, context):
+
+
+		# CARGAR DEDICACIONES DE LA ENTIDAD
+		dedicaciones_entidad = DedicacionEntidad.objects.filter(entidad_id=entidad.codigo).values('dedicacion_id')
+		dedicaciones = Dedicacion.objects.filter(id__in=dedicaciones_entidad)
+
+		context['entidad'] = entidad
+		context['tipos'] = ((0, 'Rector'), (1, 'Departamental'), (2, 'Municipal o Distrital'), (3, 
+			'Club'), (4, 'Escuela'), (5, 'Instituto'))
+		"""context['tipos'] = [{'0': 'Rector'}, {'1': 'Departamental'}, {'2': 'Municipal o Distrital'}, 
+		{'3': 'Club'}, {'4': 'Escuela'}, {'5': 'Instituto'}]"""
+		print(context['tipos'][0])
+		context['loop_times'] = range(0, 6)
+		context[str(entidad.caracter_economico)+'c'] = entidad.caracter_economico
+
+		for dedicacion in dedicaciones:
+			context[str(dedicacion.id)+'d'] = dedicacion.id
+
+		# CARGAR DEPARTAMENTOS
+		departamentos = Ubicacion.objects.all().distinct('departamento').values('departamento')
+		context['departamentos'] = departamentos
+
+		# CARGAR MUNICIPIOS
+		municipios = Ubicacion.objects.filter(departamento=entidad.ubicacion.departamento).values('municipio')
+		context['municipios'] = municipios
 	
 	def get_context_data(self, **kwargs):
 		context = super(EditarEntidad, self).get_context_data(**kwargs)
@@ -173,30 +200,10 @@ class EditarEntidad(TemplateView):
 		# CARGAR ENTIDAD ASOCIADA
 		entidad = Entidad.objects.get(codigo=kwargs['id_entidad'])
 
-		# CARGAR DEDICACIONES DE LA ENTIDAD
-		dedicaciones_entidad = DedicacionEntidad.objects.filter(entidad_id=entidad.codigo).values('dedicacion_id')
-		dedicaciones = Dedicacion.objects.filter(id__in=dedicaciones_entidad)
+		self.cargar_contenido(entidad, context)
 
-		context['entidad'] = entidad
-		context[str(entidad.tipo)+'t'] = entidad.tipo
-		context[str(entidad.caracter_economico)+'c'] = entidad.caracter_economico
-
-		for dedicacion in dedicaciones:
-			context[str(dedicacion.id)+'d'] = dedicacion.id
-
-		departamentos = Ubicacion.objects.all().distinct('departamento').values('departamento')
-		lista_departamentos = []
-		for departamento in departamentos:
-			lista_departamentos.append(departamento['departamento'])
-		departamento_sel = entidad.ubicacion.departamento
-		municipios = Ubicacion.objects.filter(departamento=departamento_sel).values('municipio')
-		municipio_sel = entidad.ubicacion.municipio
-		context['datos_departamento'] = lista_departamentos
-		context['datos_municipios'] = municipios
-		context['dep_sel'] = departamento_sel
-		context['mun_sel'] = municipio_sel
-
-		#print(context)
+		form_dedicacion = FormRegistroDedicacionEntidad()
+		context['form_dedicacion'] = form_dedicacion
 
 		return context
 
@@ -208,24 +215,45 @@ class EditarEntidad(TemplateView):
 		grupo = ver_grupo.asignarGrupo(self.request.user)
 		context[grupo] = grupo
 
+		form_dedicacion = FormRegistroDedicacionEntidad(request.POST)
 		# CODIGO EN BASE DE DATOS
 		entidad = Entidad.objects.get(codigo=kwargs['id_entidad'])
 
-		# CAMPOS EDITABLES
-		entidad.nombre = request.POST['nombre']
-		entidad.tipo = request.POST['tipo']
-		entidad.caracter_economico = request.POST['caracter_economico']
-		entidad.telefono = request.POST['telefono']
-		entidad.correo = request.POST['correo']
-		entidad.direccion = request.POST['direccion']
-		entidad.cc_representante_legal = request.POST['cc_representante_legal']
-		entidad.nombre_representante_legal = request.POST['nombre_representante_legal']
+		if form_dedicacion.is_valid():
 
-		entidad.save(update_fields=['nombre', 'tipo', 'caracter_economico', 'telefono', 'direccion', 'correo', 'cc_representante_legal', 'nombre_representante_legal'])
+			# ACTUALIZAR LAS DEDICACIONES DE LA ENTIDAD
+			DedicacionEntidad.objects.filter(entidad=entidad).delete()
 
-		kwargs['edicion'] = 'Se han modificado los datos exitosamente'
+			for dedicacion in form_dedicacion.cleaned_data['escoger_dedicaciones']:
 
-		return redirect ("/coldeportes/entidad/" + kwargs['id_entidad'], **kwargs)
+				ded = Dedicacion.objects.get(dedicacion=dedicacion)
+				ded_ent = DedicacionEntidad(dedicacion=ded, entidad=entidad)
+				ded_ent.save()
+
+			# CAMPOS EDITABLES
+			entidad.nombre = request.POST['nombre']
+			entidad.tipo = request.POST['tipo']
+			entidad.caracter_economico = request.POST['caracter_economico']
+			entidad.telefono = request.POST['telefono']
+			entidad.correo = request.POST['correo']
+			entidad.direccion = request.POST['direccion']
+			entidad.cc_representante_legal = request.POST['cc_representante_legal']
+			entidad.nombre_representante_legal = request.POST['nombre_representante_legal']
+
+			# ACTUALIZAR LOS DATOS
+			entidad.save(update_fields=['nombre', 'tipo', 'caracter_economico', 'telefono', 'direccion', 'correo', 'cc_representante_legal', 'nombre_representante_legal'])
+
+			
+			kwargs['edicion'] = 'Se han modificado los datos exitosamente'
+
+			return redirect ("/coldeportes/entidad/" + kwargs['id_entidad'], **kwargs)
+
+		else:
+
+			self.cargar_contenido(entidad, context)
+
+			context['error_dedicacion'] = 'Debe seleccionar al menos una dedicacion'
+			return render(request, self.template_name, context)
 
 
 class UbicacionEntidades(TemplateView):
@@ -264,16 +292,9 @@ class BuscarEntidades(TemplateView):
 		grupo = ver_grupo.asignarGrupo(self.request.user)
 		context[grupo] = grupo
 
-		if grupo == 'coldeportes':
-			pass
+		entidades = Entidad.objects.filter(estado=True)
+		context['entidades'] = entidades
 
-		else:
-
-			entidad = Entidad.objects.get(usuario=self.request.user)
-
-			self.deportistas = Deportistas.objects.filter(estado=True, entidad=entidad)
-			context['deportistas'] = self.deportistas
-		
 		return context
 
 class BorrarDeportistas(TemplateView):
@@ -461,7 +482,7 @@ class DetallesEscenario(TemplateView):
 		current_url = self.request.resolver_match.url_name
 		print(current_url)
 
-		if current_url.find('success'):
+		if 'editado' in current_url:
 			context['editado'] = 'Se han actualizado exitosamente los datos del escenario: ' + escenario.nombre
 
 		return context
@@ -596,6 +617,28 @@ class EditarEscenario(TemplateView):
 
 		return render(request, self.template_name, context)
 
+class ListarEscenarios(TemplateView):
+	template_name = 'escenarios/listar_escenarios.html'
+
+	def get_context_data(self, **kwargs):
+		context = super(ListarEscenarios, self).get_context_data(**kwargs)
+
+		# CARGAR INFORMACIÓN DE USUARIO ACTUAL
+		ver_grupo = InformacionUsuario()
+		grupo = ver_grupo.asignarGrupo(self.request.user)
+		context[grupo] = grupo
+
+		if grupo == 'coldeportes':
+			pass
+
+		else:
+
+			entidad = Entidad.objects.get(usuario=self.request.user)
+
+			escenarios = Escenarios.objects.filter(entidad=entidad)
+			context['escenarios'] = escenarios
+
+		return context
 
 @csrf_exempt
 def ajax_get_municipios(request):
