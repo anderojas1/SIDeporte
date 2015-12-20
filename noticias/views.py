@@ -5,6 +5,7 @@ from django.views.generic.edit import DeleteView, UpdateView
 from .models import Noticias
 from .forms import FormRegistroNoticias, FormEdicionNoticias
 from Coldeportes.grupos import InformacionUsuario
+from Coldeportes.models import Entidad
 # Create your views here.
 
 
@@ -67,8 +68,19 @@ class RegistrarNoticia(TemplateView):
 		context = super(RegistrarNoticia, self).get_context_data(**kwargs)
 		self.form_registrar_noticia = FormRegistroNoticias(request.POST, request.FILES)
 
+		ver_grupo = InformacionUsuario()
+		grupo = ver_grupo.asignarGrupo(self.request.user)
+		context[grupo] = grupo
+
 		if self.form_registrar_noticia.is_valid():
-			self.form_registrar_noticia.save()
+			titulo = self.form_registrar_noticia.cleaned_data['titulo']
+			contenido = self.form_registrar_noticia.cleaned_data['contenido']
+			imagen = self.form_registrar_noticia.cleaned_data['imagen']
+			entidad = Entidad.objects.get(usuario=self.request.user)
+
+			noticia = Noticias(contenido=contenido, imagen=imagen, titulo=titulo, entidad=entidad)
+			noticia.save()
+
 			context['exito'] = 'La noticia ha sido registrada exitosamente'
 
 			return render(request, self.template_name, context)

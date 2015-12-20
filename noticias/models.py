@@ -1,6 +1,7 @@
 from django.db import models
 from django.utils import timezone
 from django.core.exceptions import ObjectDoesNotExist
+from Coldeportes.models import Entidad
 
 # Create your models here.
 
@@ -8,9 +9,11 @@ class Noticias (models.Model):
 	codigo 		= models.CharField(max_length=20, primary_key=True)
 	titulo 		= models.CharField(max_length=100)
 	fecha 		= models.DateField(editable=False)
-	imagen 		= models.ImageField(upload_to='imagenes', blank=True)
+	imagen 		= models.ImageField(upload_to='noticias', blank=True)
 	contenido 	= models.CharField(max_length=10000)
 	estado 		= models.BooleanField(default=True)
+	entidad 	= models.ForeignKey(Entidad, null=True)
+
 	def __str__(self):
 		return self.titulo
 
