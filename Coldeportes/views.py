@@ -10,6 +10,7 @@ from .models import Entidad, Deportistas, Ubicacion, Dedicacion, DedicacionEntid
 from .forms import *
 from .grupos import InformacionUsuario
 from .match_ubicacion import *
+from .validacion_campos_vacios import *
 
 
 # VER LOS DETALLES DE UNA ENTIDAD
@@ -516,9 +517,11 @@ class BorrarEscenario(TemplateView):
 
 		return render(request, 'escenarios/buscar_escenarios.html', context)
 
+# EDITAR INFORMACIÓN DE ESCENARIOS
 class EditarEscenario(TemplateView):
 	template_name = 'escenarios/editar_escenario.html'
 
+	# MÉTODO PARA CARGAR LA INFORMACIÓN DEL ESCENARIO
 	def cargar_informacion(self, context, escenario):
 
 		# CARGAR ESCALA NUMÉRICA DE CALIFICACIÓN DEL ESTADO DEL ESCENARIO
@@ -537,6 +540,7 @@ class EditarEscenario(TemplateView):
 		municipios = Ubicacion.objects.filter(departamento=escenario.ubicacion.departamento).values('municipio')
 		context['municipios'] = municipios
 
+	# CARGAR INFORMACIÓN PREVIA A LA CARGA DE LA'PÁGINA
 	def get_context_data(self, **kwargs):
 		context = super(EditarEscenario, self).get_context_data(**kwargs)
 
@@ -553,6 +557,7 @@ class EditarEscenario(TemplateView):
 
 		return context
 
+	# LLAMAR A FUNCIONES CUANDO SE ENVÍA EL FORMULARIO
 	def post(self, request, *args, **kwargs):
 		context = super(EditarEscenario, self).get_context_data(**kwargs)
 
@@ -561,12 +566,15 @@ class EditarEscenario(TemplateView):
 		grupo = ver_grupo.asignarGrupo(self.request.user)
 		context[grupo] = grupo
 
+		# CARGAR ESCENARIO
 		escenario = Escenarios.objects.get(codigo=kwargs['id_escenario'])
 		context['escenario'] = escenario
 
+		# OBTENER INFORMACIÓN DEL MUNICIPIO Y DEPARTAMENTO SELECCIONADOS
 		departamento = request.POST['type']
 		municipio = request.POST['municipio']
 
+		# PUEDE QUE LA UBICACIÓN NO EXISTA...
 		try:
 
 			# OBTENER LA UBICACIÓN
@@ -585,7 +593,25 @@ class EditarEscenario(TemplateView):
 			# SI FALTA ALGUNA INFORMACIÓN: CAMPOS VACÍOS
 			if not nombre or not direccion or not actividad or not capacidad_d or not capacidad_e or not descripcion:
 				
-				pass
+				if not nombre:
+					context['vacio_nombre'] = 'El campo nombre es requerido'
+
+				if not direccion:
+					context['vacio_direccion'] = 'El campo direccion es requerido'
+
+				if not actividad:
+					context['vacio_actividad'] = 'El campo actividad es requerido'
+
+				if not capacidad_d:
+					context['vacio_capacidad_d'] = 'El campo capacidad de deportistas es requerido'
+
+				if not capacidad_e:
+					context['vacio_capacidad_e'] = 'El campo capacidad de público es requerido'
+
+				if not descripcion:
+					context['vacio_descripcion'] = 'El campo descripcion es requerido'
+
+				self.cargar_informacion(context, escenario)
 
 			else:
 
