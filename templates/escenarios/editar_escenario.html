@@ -80,18 +80,36 @@ Editar Entidad
 					</select>
 				</div>
 				<div class="form-group">
+					{% if vacio_descripcion %}
+					<div class="alert alert-danger alert-dismissable">
+						<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+						{{vacio_descripcion}}
+					</div>
+					{% endif %}
 					<label>
 						Descripción
 					</label>
 					<textarea class="form-control" id="id_descripcion", name="descripcion", rows="4" type="text">{{escenario.descripcion}}</textarea>
 				</div>
 				<div class="form-group">
+					{% if vacio_capacidad_e %}
+					<div class="alert alert-danger alert-dismissable">
+						<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+						{{vacio_capacidad_e}}
+					</div>
+					{% endif %}
 					<label>
 						Capacidad de público
 					</label>
 					<input class="form-control" id="id_capacidad_publico" value="{{escenario.capacidad_publico}}" name="capacidad_publico" type="number">
 				</div>
 				<div class="form-group">
+					{% if vacio_capacidad_d %}
+					<div class="alert alert-danger alert-dismissable">
+						<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+						{{vacio_capacidad_d}}
+					</div>
+					{% endif %}
 					<label>
 						Capacidad de deportistas en entrenamiento
 					</label>
@@ -126,6 +144,12 @@ Editar Entidad
 					</select>
 				</div>
 				<div class="form-group">
+					{% if vacio_direccion %}
+					<div class="alert alert-danger alert-dismissable">
+						<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+						{{vacio_direccion}}
+					</div>
+					{% endif %}
 					<label>
 						Dirección
 					</label>

@@ -597,7 +597,7 @@ class EditarEscenario(TemplateView):
 					context['vacio_nombre'] = 'El campo nombre es requerido'
 
 				if not direccion:
-					context['vacio_direccion'] = 'El campo direccion es requerido'
+					context['vacio_direccion'] = 'El campo dirección es requerido'
 
 				if not actividad:
 					context['vacio_actividad'] = 'El campo actividad es requerido'
@@ -609,7 +609,7 @@ class EditarEscenario(TemplateView):
 					context['vacio_capacidad_e'] = 'El campo capacidad de público es requerido'
 
 				if not descripcion:
-					context['vacio_descripcion'] = 'El campo descripcion es requerido'
+					context['vacio_descripcion'] = 'El campo descripción es requerido'
 
 				self.cargar_informacion(context, escenario)
 
