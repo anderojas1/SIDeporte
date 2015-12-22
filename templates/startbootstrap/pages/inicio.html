@@ -1,0 +1,61 @@
+{% extends  "startbootstrap/pages/index.html" %}
+{% load staticfiles %}
+
+{% block title %}
+Inicio
+{% endblock %}
+
+{% block content %}
+	<div class="container">
+	    <div id="slides">
+	    {% for noticia in noticias %}
+	    <a href="{{noticia.get_absolute_url}}"><img src="../../imagenes/{{ MEDIA_URL}}{{noticia.imagen}}" alt="{{noticia.titulo}}" /></a>
+	    {% endfor %}
+	    </div>
+	</div><br><br>
+	<p class="text-justify">
+	SIDeportes es el nuevo sistema adscrito a Coldeportes. El sistema permite administrar toda
+	la información disponible sobre entidades, deportistas y atletas pertenecientes a ella y escenarios deportivos. El sistema además cuenta con un módulo de noticias en donde constatemente se publican noticias de interés general, nuevas resoluciones, circulares, convocatorias, juegos deportivos nacionales 
+	e internacionales y disposiciones generales.</p>
+	<p class="text-justify">
+	Para registrarse como entidad adscrita a Coldeportes debe enviar un correo a Coldeportes. Si 
+	es deportista y quiere estar registrado en el sistema, contacte a la entidad a la que se encuentra 
+	afiliado para que sus datos estén en el sistema.</p>
+	{% if user.is_authenticated %}
+	    <p class="text-justify">
+	        En el menú de la izquierda encontrará todas las acciones que puede realizar en el sistema.
+	    </p>
+	{% else %}
+	    <p class="text-justify">
+	        <a href="/login">
+	            <button class="btn btn-primary">
+	                Iniciar sesión
+	            </button>
+	        </a>
+	    </p>
+	{% endif %}
+{% endblock %}
+{% block graphics_js %}
+<!-- SlidesJS Required: Link to jQuery -->
+  <!--<script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>-->
+  <!-- End SlidesJS Required -->
+
+  <!-- SlidesJS Required: Link to jquery.slides.js -->
+  <script src="{% static 'js/jquery.slides.min.js' %}"></script>
+  <!-- End SlidesJS Required -->
+  <link rel="stylesheet" href="{% static 'dist/css/slider.css' %}">
+    <script>
+    $(function() {
+      $('#slides').slidesjs({
+        width: 600,
+        height: 410,
+        play: {
+          active: true,
+          auto: true,
+          interval: 4000,
+          swap: true
+        }
+      });
+    });
+  </script>
+{% endblock %}
