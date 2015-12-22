@@ -6,9 +6,10 @@ from django.views.generic import TemplateView
 from Coldeportes.models import Entidad
 from Coldeportes.grupos import InformacionUsuario
 from django.contrib.auth import authenticate
+from noticias.models import Noticias
 
 class Index(TemplateView):
-	template_name = 'startbootstrap/pages/index.html'
+	template_name = 'startbootstrap/pages/inicio.html'
 
 	def get_context_data(self, **kwargs):
 		context = super(Index, self).get_context_data(**kwargs)
@@ -21,5 +22,8 @@ class Index(TemplateView):
 
 		#if entidad.usuario == usuario:
 		#	context['editable'] = True
+
+		noticias = Noticias.objects.all()
+		context['noticias'] = noticias
 
 		return context
