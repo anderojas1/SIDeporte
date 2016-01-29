@@ -130,17 +130,22 @@ class Deportistas(models.Model):
 						(1, 'Registro civil'),
 						(2,'Tarjeta de identidad'),
 						(3, 'Cédula de extranjería'))
+	opt_categoria = ((0, 'Infantil'),
+					(1, 'Pre-Juvenil'),
+					(2, 'Juvenil'),
+					(3, 'Mayores'),
+					(4, 'Alto rendimiento'))
 	nombre 					= models.CharField(max_length=30)
 	tipo_documento			= models.SmallIntegerField(choices=opt_tipo_documento, null=True)
 	doc_identidad 			= models.BigIntegerField(primary_key=True)
 	fecha_nacim				= models.DateField()
-	lugar_nacim				= models.CharField(max_length=20)
-	deporte					= models.CharField(max_length=20)
+	lugar_nacimiento		= models.ForeignKey(Ubicacion, null=True)
+	deporte_practicado		= models.SmallIntegerField(null=True)
+	categoria 				= models.SmallIntegerField(choices=opt_categoria, null=True)
 	estado 					= models.BooleanField(default=True)
-	categoria				= models.CharField(max_length=10)
 	ranking_nacional		= models.IntegerField(null=True)
 	ranking_internacional	= models.IntegerField(null=True)
-	opt_tipo_asociado		= ((0, 'jugador con pase'), (1, 'jugador asociado con mensualidad'),(2,'jugador asociado con anualidad'))
+	opt_tipo_asociado		= ((0, 'Jugador con pase'), (1, 'Jugador asociado con mensualidad'),(2,'Jugador asociado con anualidad'))
 	tipo_asociado 			= models.SmallIntegerField(choices=opt_tipo_asociado)
 	# reconocimiento			= models.CharField(max_length=0) ---> Esto es multivaluado
 	entidad 				= models.ForeignKey(Entidad, null=True)

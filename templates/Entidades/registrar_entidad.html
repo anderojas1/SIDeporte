@@ -1,11 +1,9 @@
 {% extends "startbootstrap/pages/index.html" %}
+{% load staticfiles %}
 {% block title %}
 	Registrar Nueva Entidad
 {% endblock %}
-{% block graphics_js %}
-	<script type="text/javascript" src="/static/js/prototype.js"></script>
-	<script type="text/javascript" src="/static/js/ubicaciones.js"></script>
-{% endblock %}
+
 
 {% block title_content %}
 	Registrar Entidad
@@ -152,5 +150,10 @@
 			El formulario no pudo ser cargado. Por favor inténtelo más tarde
 		</div>
 	</div>
-	{% endif %}
+	{% endif %}	
+{% endblock %}
+
+{% block graphics_js %}
+	<script type="text/javascript" src="{% static 'js/prototype.js' %}"></script>
+	<script type="text/javascript" src="{% static 'js/ubicaciones.js' %}"></script>
 {% endblock %}

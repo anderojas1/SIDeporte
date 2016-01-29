@@ -83,15 +83,42 @@ class FormRegistroDeportista(ModelForm):
 
 		model = Deportistas
 
-		opt_tipo_documento = ((0, 'Cédula de ciudadanía'), 
-						(1, 'Registro civil'),
-						(2,'Tarjeta de identidad'),
-						(3, 'Cédula de extranjería'))
+		opt_deporte = ((0, 'Atletismo'),
+						(1, 'Baloncesto'),
+						(2, 'Balonmano'),
+						(3, 'Béisbol'),
+						(4, 'Bicicros'),
+						(5, 'Boxeo'),
+						(6, 'Equitación'),
+						(7, 'Esgrima'),
+						(6, 'Fútbol'),
+						(7, 'Futsal'),
+						(8, 'Gimnasia'),
+						(9, 'Golf'),
+						(10, 'Halterofilia'),
+						(11, 'Hockey'),
+						(12, 'Judo'),
+						(13, 'Karate'),
+						(14, 'Lucha'),
+						(15, 'Motociclismo'),
+						(16, 'Natación'),
+						(17, 'Orientación'),
+						(18, 'Patinaje'),
+						(19, 'Rugby'),
+						(20, 'Sóftbol'),
+						(21, 'Skateboard'),
+						(21, 'Squash'),
+						(22, 'Taekwondo'),
+						(23, 'Tenis'),
+						(24, 'Tenis de mesa'),
+						(25, 'Triatlón'),
+						(26, 'Vela'),
+						(27, 'Voleibol'),
+						(28, 'Volei playa'),
+						(29, 'Waterpolo'),
+						)
 
-		opt_tipo_asociado		= ((0, 'jugador con pase'), (1, 'jugador asociado con mensualidad'),
-			(2,'jugador asociado con anualidad'))
-
-		fields = ['nombre', 'tipo_documento', 'doc_identidad', 'fecha_nacim', 'deporte', 'categoria','tipo_asociado']
+		fields = ['nombre', 'tipo_documento', 'doc_identidad', 'fecha_nacim', 'deporte_practicado', 'categoria','tipo_asociado']
 
 		widgets = {
 			'nombre': forms.TextInput(attrs={
@@ -99,7 +126,7 @@ class FormRegistroDeportista(ModelForm):
 				'placeholder': 'Nombre completo',
 				'type': 'text'
 				}),
-			'tipo_documento': forms.Select(choices=opt_tipo_asociado, attrs={
+			'tipo_documento': forms.Select(attrs={
 				'class': 'form-control'
 				}),
 			'doc_identidad': forms.NumberInput(attrs={
@@ -113,17 +140,13 @@ class FormRegistroDeportista(ModelForm):
 					'format': 'yyyy-mm-dd',
 					'picktime': 'false'
 				}),
-			'deporte': forms.TextInput(attrs={
+			'deporte_practicado': forms.Select(choices=opt_deporte, attrs={
 				'class': 'form-control',
-				'placeholder': 'Nombre completo',
-				'type': 'text'
 				}),
-			'categoria': forms.TextInput(attrs={
-				'class': 'form-control',
-				'placeholder': 'Nombre completo',
-				'type': 'text'
+			'tipo_asociado': forms.Select(attrs={
+				'class': 'form-control'
 				}),
-			'tipo_asociado': forms.Select(choices=opt_tipo_asociado, attrs={
+			'categoria': forms.Select(attrs={
 				'class': 'form-control'
 				})
 

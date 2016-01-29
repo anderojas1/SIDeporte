@@ -1,16 +1,19 @@
-from django.shortcuts import render, render_to_response, redirect
+from django.shortcuts import render, render_to_response, redirect, HttpResponse
 from django.core.urlresolvers import reverse
 from django.views.generic import TemplateView
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.csrf import ensure_csrf_cookie
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.models import User, Group
+from io import BytesIO
 
 from .models import Entidad, Deportistas, Ubicacion, Dedicacion, DedicacionEntidad
 from .forms import *
 from .grupos import InformacionUsuario
 from .match_ubicacion import *
 from .validacion_campos_vacios import *
+
+from reportes.views import MyPrint
 
 
 # VER LOS DETALLES DE UNA ENTIDAD
@@ -298,6 +301,28 @@ class BuscarEntidades(TemplateView):
 
 		return context
 
+	"""def post(self, request, *args, **kwargs):
+		context = super(BuscarEntidades, self).get_context_data(**kwargs)
+
+		entidades = Entidad.objects.filter(estado=True)
+		context['entidades'] = entidades
+
+		if 'pdf' in request.POST:
+
+		    response = HttpResponse(content_type='application/pdf')
+		    response['Content-Disposition'] = 'attachment; filename="My Users.pdf"'
+		 
+		    buffer = BytesIO()
+		 
+		    report = MyPrint(buffer, 'Letter')
+		    pdf = report.print_users()
+		 
+		    response.write(pdf)
+		    return response
+
+		else:
+			return render(request, self.template_name, context)"""
+
 class BorrarDeportistas(TemplateView):
 	template_name = 'Deportistas/borrar_deportista.html'
 
@@ -339,6 +364,7 @@ class BuscarDeportistas(TemplateView):
 class RegistrarDeportista(TemplateView):
 	template_name = 'Deportistas/registrar_deportista.html'
 	form_deportista = FormRegistroDeportista()
+	form_ubicacion = FormRegistroUbicacion()
 
 	def get_context_data(self, **kwargs):
 		context = super(RegistrarDeportista, self).get_context_data(**kwargs)
@@ -348,6 +374,7 @@ class RegistrarDeportista(TemplateView):
 		context[grupo] = grupo
 
 		context['form'] = self.form_deportista
+		context['form_ubicacion'] = self.form_ubicacion
 
 		return context
 
