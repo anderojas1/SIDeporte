@@ -55,6 +55,8 @@ class FormRegistroEntidad (ModelForm):
 
 class FormRegistroUbicacion (forms.Form):
 
+	print(Ubicacion.objects.all())
+
 	departamentos = [('', 'Seleccione un departamento...',)] + 	[(dep.departamento, dep.departamento) for dep in Ubicacion.objects.all().distinct('departamento')] 
 	municipios = [('', 'Seleccione un departamento primero...')]
 	type = forms.ChoiceField(choices=departamentos, widget=forms.Select(attrs={'onchange': 'get_municipios();', 'class': 'form-control'}))
@@ -73,7 +75,8 @@ class FormRegistroUbicacion (forms.Form):
 		
 class FormRegistroDedicacionEntidad(forms.Form):
 
-	dedicaciones = [(ded.dedicacion, ded.dedicacion) for ded in Dedicacion.objects.all()]
+	dedicaciones = [(ded.id, ded.dedicacion) for ded in Dedicacion.objects.all()]
+	print(dedicaciones)
 	escoger_dedicaciones = forms.MultipleChoiceField(required=True,
         widget=forms.CheckboxSelectMultiple(attrs={'class': 'checkbox'}), choices=dedicaciones)
 

@@ -78,6 +78,7 @@ class RegistrarEntidad(TemplateView):
 		context[grupo] = grupo
 		municipio = request.POST['municipio']
 		departamento = request.POST['type']
+		print(request.POST)
 
 		# SI LOS FORMULARIOS DE DEDICACIÓN Y REGISTRO DE ENTIDAD ESTÁN CORRECTOS
 		if self.form_registrar_entidad.is_valid() and self.form_registro_dedicacion.is_valid():
@@ -104,7 +105,7 @@ class RegistrarEntidad(TemplateView):
 
 					# REGISTRO DE DEDICACIONES (TANTAS COMO HAYA SELECCIONADO)
 					for dedicacion in self.form_registro_dedicacion.cleaned_data['escoger_dedicaciones']:
-						ded = Dedicacion.objects.get(dedicacion=dedicacion)
+						ded = Dedicacion.objects.get(id=dedicacion)
 						ded_ent = DedicacionEntidad(dedicacion=ded, entidad=entidad)
 						ded_ent.save()
 
@@ -230,7 +231,7 @@ class EditarEntidad(TemplateView):
 
 			for dedicacion in form_dedicacion.cleaned_data['escoger_dedicaciones']:
 
-				ded = Dedicacion.objects.get(dedicacion=dedicacion)
+				ded = Dedicacion.objects.get(id=dedicacion)
 				ded_ent = DedicacionEntidad(dedicacion=ded, entidad=entidad)
 				ded_ent.save()
 

@@ -93,6 +93,15 @@ class DedicacionEntidad(models.Model):
 	entidad = models.ForeignKey(Entidad)
 	dedicacion = models.ForeignKey(Dedicacion)
 
+
+class Actividades(models.Model):
+	codigo= models.AutoField(primary_key=True)
+	actividad = models.CharField(max_length=200)
+	tipo_actividad = models.ForeignKey(Dedicacion)
+
+	def __str__(self):
+		return self.actividad
+
 class Escenarios(models.Model):
 	codigo 					= models.CharField(max_length=200, primary_key=True)
 	nombre 					= models.CharField(max_length=400)
@@ -101,7 +110,7 @@ class Escenarios(models.Model):
 	direccion				= models.CharField(max_length=50, null=True)
 	entidad 				= models.ForeignKey(Entidad)
 	tipo 					= models.OneToOneField(Dedicacion, null=True)
-	actividad				= models.CharField(max_length=100, null=True)
+	actividad				= models.ForeignKey(Actividades)
 	capacidad_publico		= models.BigIntegerField(default=0)
 	capacidad_deportistas	= models.IntegerField(default=0)
 	escala					= models.SmallIntegerField(default=0)
@@ -140,7 +149,7 @@ class Deportistas(models.Model):
 	doc_identidad 			= models.BigIntegerField(primary_key=True)
 	fecha_nacim				= models.DateField()
 	lugar_nacimiento		= models.ForeignKey(Ubicacion, null=True)
-	deporte_practicado		= models.SmallIntegerField(null=True)
+	deporte_practicado		= models.ForeignKey(Actividades)
 	categoria 				= models.SmallIntegerField(choices=opt_categoria, null=True)
 	estado 					= models.BooleanField(default=True)
 	ranking_nacional		= models.IntegerField(null=True)
