@@ -213,3 +213,23 @@ class ReporteDeportistasEntidad (TemplateView):
       return response
 
     return render(request, self.template_name, context)
+
+class ReporteDeportistasGenero(TemplateView):
+  template_name = 'reportes/deportistas-genero.html'
+
+  def get_context_data(self, **kwargs):
+    context = super(ReporteDeportistasGenero, self).get_context_data(**kwargs)
+
+    ver_grupo = InformacionUsuario()
+    grupo = ver_grupo.asignarGrupo(self.request.user)
+    context[grupo] = grupo
+
+    deportistas_m = Deportistas.objects.filter(genero=0)
+    deportistas_f = Deportistas.objects.filter(genero=1)
+    deportistas_o = Deportistas.objects.filter(genero=2)
+
+    context['deportistas_m'] = deportistas_m
+    context['deportistas_f'] = deportistas_f
+    context['deportistas_o'] = deportistas_o
+
+    return context
