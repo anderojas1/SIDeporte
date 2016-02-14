@@ -144,9 +144,13 @@ class Deportistas(models.Model):
 					(2, 'Juvenil'),
 					(3, 'Mayores'),
 					(4, 'Alto rendimiento'))
+	opt_genero = ((0, 'Masculino'),
+					(1, 'Femenino'),
+					(2, 'Otro'))
 	nombre 					= models.CharField(max_length=30)
 	tipo_documento			= models.SmallIntegerField(choices=opt_tipo_documento, null=True)
 	doc_identidad 			= models.BigIntegerField(primary_key=True)
+	genero 					= models.SmallIntegerField(choices=opt_genero, default=0)
 	fecha_nacim				= models.DateField()
 	lugar_nacimiento		= models.ForeignKey(Ubicacion, null=True)
 	deporte_practicado		= models.ForeignKey(Actividades)
