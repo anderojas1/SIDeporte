@@ -8,6 +8,8 @@ from reportlab.platypus import SimpleDocTemplate, Paragraph, Table, TableStyle
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.lib.enums import TA_CENTER
 from django.contrib.auth.models import User
+from Coldeportes.models import *
+from Coldeportes.grupos import InformacionUsuario
 
 
 class MyPrint:
@@ -70,3 +72,55 @@ class MenuReportesTablas(TemplateView):
 
 class ReportesTablas(TemplateView):
 	template_name = 'reportes/reporte_tablas.html'
+
+class ReporteRankingNacionalDeporte(TemplateView):
+  template_name = 'reportes/ranking-nacional-deporte.html'
+
+  def get_context_data(self, **kwargs):
+    context = super(ReporteRankingNacionalDeporte, self).get_context_data(**kwargs)
+
+    ver_grupo = InformacionUsuario()
+    grupo = ver_grupo.asignarGrupo(self.request.user)
+    context[grupo] = grupo
+
+    context['inicio'] = 'inicio'
+    context['deportes'] = self.get_deportes()
+
+    return context
+
+  def get_deportes (self):
+    dedicacion = Dedicacion.objects.get(dedicacion='Deporte')
+    deportes = Actividades.objects.filter(tipo_actividad=dedicacion).order_by("actividad")
+
+    return deportes
+
+  def post(self, request, *args, **kwargs):
+    context = super(ReporteRankingNacionalDeporte, self).get_context_data(**kwargs)
+
+    ver_grupo = InformacionUsuario()
+    grupo = ver_grupo.asignarGrupo(self.request.user)
+    context[grupo] = grupo
+    print (request.POST)
+
+    deporte_seleccionado = request.POST['deporte']
+
+    if len(deporte_seleccionado) > 0:
+
+      deporte_esc = Actividades.objects.get(codigo=deporte_seleccionado)
+      deportistas = Deportistas.objects.filter(deporte_practicado=deporte_esc).order_by("ranking_nacional")
+
+      if len(deportistas) > 0:
+        context['deportistas'] = deportistas
+        context['deporte'] = deporte_esc
+
+      else:
+        context['vacio'] = 'No hay deportistas registrados para el deporte ' + deporte_esc.actividad
+        context['inicio'] = "inicio"
+        context['deportes'] = self.get_deportes()
+
+    else:
+      context['invalido'] = 'Debe seleccionar un deporte'
+      context['inicio'] = "inicio"
+      context['deportes'] = self.get_deportes()
+
+    return render(request, self.template_name, context)
