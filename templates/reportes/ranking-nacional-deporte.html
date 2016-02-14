@@ -83,6 +83,14 @@
             </div>
             <!-- /.panel-body -->
         </div>
+        <div class="row">
+	        <div class="col-sm-12">
+	        	<form method="POST" role="form">
+	        		{% csrf_token %}
+	        		<button class="btn btn-default pull-right" name="pdf" type="submit" value="{{deporte.codigo}}">Generar reporte PDF</button>
+	        	</form>
+	        </div>
+	    </div>
 	{% endif %}
 	<script src="{% static 'bower_components/datatables/media/js/jquery.dataTables.min.js' %}"></script>
 	<script src="{% static 'bower_components/datatables-plugins/integration/bootstrap/3/dataTables.bootstrap.min.js' %}"></script>
