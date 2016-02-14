@@ -13,8 +13,6 @@ from .grupos import InformacionUsuario
 from .match_ubicacion import *
 from .validacion_campos_vacios import *
 
-from reportes.views import MyPrint
-
 
 # VER LOS DETALLES DE UNA ENTIDAD
 class DetallesEntidad(TemplateView):
