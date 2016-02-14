@@ -24,6 +24,12 @@ class DetallesNoticia(TemplateView):
 		if 'noticia' not in context:
 			context['noticia'] = self.noticia
 
+		entidad_noticia = self.noticia.entidad
+		entidad_actual = Entidad.objects.get(usuario=self.request.user)
+
+		if entidad_noticia == entidad_actual or entidad_actual.codigo == 'coldeportes':
+			context['editar'] = "editar"
+
 		return context
 
 	"""def post(self, request, *args, **kwargs):
