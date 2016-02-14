@@ -1,0 +1,90 @@
+{% extends "startbootstrap/pages/index.html" %}
+{% load staticfiles %}
+{% block title %}
+	Ver Deportistas por Entidad
+{% endblock %}
+
+{% block title_content %}
+	Deportistas por entidad
+{% endblock %}
+
+{% block content %}
+
+	{% if invalido %}
+		<div class="alert alert-danger alert-dismissable">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+            {{invalido}}
+        </div>
+    {% elif vacio %}
+    	<div class="alert alert-danger alert-dismissable">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+            {{vacio}}
+        </div>
+    {% endif %}
+    {% if get %}
+		<p class="text-justify">
+			El reporte es sencillo de ser generado. Seleccione la entidad y dé clic en enviar. A continuación se mostrará un reporte en tabla con deportistas adscritos a la entidad seleccionada y podrá descargarlo en formato PDF
+		</p>
+		<br>
+		<form role="form" method="POST">
+			{% csrf_token %}
+			<p>Seleccione una entidad de las siguientes opciones:
+			<div class="form-group">
+				<label>
+					Entidad
+				</label>
+				<select id="entidad_id" class="form-control" name="entidad">
+				<option selected="" value="">-----------</option>
+				{% for entidad in entidades %}
+					<option value="{{entidad.codigo}}">
+						{{entidad.nombre}} ({{entidad.codigo}})
+					</option>
+				{% endfor %}
+				</select>
+			</div>
+			<button type="submit" class="btn btn-primary btn-lg btn-block">Consultar deportistas</button>
+		</form>
+	{% elif post %}
+		<div class="panel panel-primary">
+            <div class="panel-heading">
+                <h3><center>Deportistas adscritos a {{entidad}}</center></h3>
+            </div>
+            <!-- /.panel-heading -->
+            <div class="panel-body">
+                <div class="dataTable_wrapper">
+                    <table class="table table-striped table-bordered table-hover" id="dataTables-example">
+                        <thead>
+                            <tr>
+                                <th>Nombre</th>
+                                <th>Fecha de nacimiento</th>
+                                <th>Lugar de nacimiento</th>
+                                <th>Deporte practicado</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        	{% for deportista in deportistas %}
+                            <tr class="info">
+                                <td class="center">{{deportista.nombre}}</td>
+                                <td class="center">{{deportista.fecha_nacim}}</td>
+                                <td class="center">{{deportista.lugar_nacimiento}}</td>
+                                <td class="center">{{deportista.deporte_practicado}}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <!-- /.table-responsive -->
+            </div>
+            <!-- /.panel-body -->
+        </div>
+        <div class="row">
+	        <div class="col-sm-12">
+	        	<form method="POST" role="form">
+	        		{% csrf_token %}
+	        		<button class="btn btn-outline btn-success btn-lg pull-right" name="pdf" type="submit" value="{{entidad}}">Generar reporte PDF</button>
+	        	</form>
+	        </div>
+	    </div>
+	{% endif %}
+
+{% endblock %}

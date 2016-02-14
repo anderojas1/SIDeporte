@@ -41,12 +41,17 @@ class PDFReport:
         styles.add(ParagraphStyle(name='centered', alignment=TA_CENTER))
 
         elements.append(Paragraph(encabezado, styles['Heading1']))
-        data.append(['Nombre', 'Fecha nacimiento', 'Lugar nacimiento', 'Posición', 'Entidad'])
 
         if "Ranking" in encabezado:
+            data.append(['Nombre', 'Fecha nacimiento', 'Lugar nacimiento', 'Posición', 'Entidad'])
             for dep in lista:
                 data.append([dep.nombre, dep.fecha_nacim, dep.lugar_nacimiento, dep.ranking_nacional,
                     dep.entidad.codigo])
+
+        elif "Deportistas" in encabezado and "adscritos" in encabezado:
+            data.append(['Nombre', 'Fecha de nacimiento', 'Lugar de nacimiento', 'Deporte que practica'])
+            for dep in lista:
+                data.append([dep.nombre, dep.fecha_nacim, dep.lugar_nacimiento, dep.deporte_practicado])
 
         table = Table(data)
         table.setStyle(TableStyle([('ALIGN',(1,1),(-2,-2),'RIGHT'),
@@ -134,9 +139,6 @@ class ReporteRankingNacionalDeporte(TemplateView):
       self.deporte_esc = Actividades.objects.get(codigo=int(request.POST['pdf']))  
       deportistas = Deportistas.objects.filter(deporte_practicado=self.deporte_esc).order_by("ranking_nacional")
 
-      for deportista in deportistas:
-        print(deportista.nombre)
-
       response = HttpResponse(content_type='application/pdf')
       filename = 'ranking_nacional_' + self.deporte_esc.actividad + '.pdf'
       encabezado = 'Ranking Nacional de ' + self.deporte_esc.actividad
@@ -145,4 +147,69 @@ class ReporteRankingNacionalDeporte(TemplateView):
       pdf = report.print_elements(deportistas, encabezado)
       response.write(pdf)
       return response
+    return render(request, self.template_name, context)
+
+class ReporteDeportistasEntidad (TemplateView):
+  template_name = 'reportes/deportistas-entidad.html'
+
+  def get_entidades(self):
+    entidades = Entidad.objects.all().order_by('nombre')
+    return entidades
+
+  def get_context_data(self, **kwargs):
+    context = super(ReporteDeportistasEntidad, self).get_context_data(**kwargs)
+
+    ver_grupo = InformacionUsuario()
+    grupo = ver_grupo.asignarGrupo(self.request.user)
+    context[grupo] = grupo
+
+    context['get'] = 'get'
+    context['entidades'] = self.get_entidades()
+
+    return context
+
+  def post(self, request, *args, **kwargs):
+    context = super(ReporteDeportistasEntidad, self).get_context_data(**kwargs)
+
+    ver_grupo = InformacionUsuario()
+    grupo = ver_grupo.asignarGrupo(self.request.user)
+    context[grupo] = grupo
+
+    if 'pdf' not in request.POST:
+      entidad = request.POST['entidad']
+      entidad_esc = Entidad.objects.get(codigo=entidad)
+
+      if len(entidad) > 0:
+
+        deportistas = Deportistas.objects.filter(entidad=entidad)
+
+        if len(deportistas) > 0:
+          context['deportistas'] = deportistas
+          context['entidad'] = entidad
+          context['post'] = 'POST'
+
+        else:
+          context['vacio'] = 'No hay deportistas adscritos a ' + entidad_esc.nombre
+          context['get'] = 'get'
+          context['entidades'] = self.get_entidades()
+
+      else:
+        context['invalido'] = 'Debe seleccionar una entidad de la lista'
+        context['get'] = 'get'
+        context['entidades'] = self.get_entidades()
+
+    else:
+      print(request.POST)
+      entidad = Entidad.objects.get(codigo=request.POST['pdf'])
+      deportistas = Deportistas.objects.filter(entidad=entidad)
+
+      response = HttpResponse(content_type='application/pdf')
+      filename = 'deportistas_adscritos_' + entidad.codigo + '.pdf'
+      encabezado = 'Deportistas adscritos a ' + entidad.codigo
+      buffer = BytesIO()
+      report = PDFReport(buffer, 'A4')
+      pdf = report.print_elements(deportistas, encabezado)
+      response.write(pdf)
+      return response
+
     return render(request, self.template_name, context)
