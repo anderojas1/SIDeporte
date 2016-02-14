@@ -1,0 +1,98 @@
+{% extends "startbootstrap/pages/index.html" %}
+{% load staticfiles %}
+{% block title %}
+	Ver Ranking Nacional
+{% endblock %}
+
+{% block title_content %}
+	Ranking Nacional por deporte
+{% endblock %}
+
+{% block content %}
+	
+	{% if invalido %}
+		<div class="alert alert-danger alert-dismissable">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+            {{invalido}}
+        </div>
+    {% elif vacio %}
+    	<div class="alert alert-danger alert-dismissable">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+            {{vacio}}
+        </div>
+    {% endif %}
+	{% if inicio %}
+		<p class="text-justify">
+			El reporte es sencillo de ser generado. Seleccione el deporte y de clic en enviar. A continuación se mostrará un reporte en tabla con el ranking nacional del deporte seleccionado y podrá descargarlo en formato PDF
+		</p>
+		<br>
+		<form role="form" method="POST">
+			{% csrf_token %}
+			<p>Seleccione un deporte de las siguientes opciones:
+			<div class="form-group">
+				<label>
+					Deporte
+				</label>
+				<select id="deporte_id" class="form-control" name="deporte">
+				<option selected="" value="">-----------</option>
+				{% for deporte in deportes %}
+					<option value="{{deporte.codigo}}">
+						{{deporte.actividad}}
+					</option>
+				{% endfor %}
+				</select>
+			</div>
+			<button type="submit" class="btn btn-primary btn-lg btn-block">Consultar ranking</button>
+		</form>
+	{% elif deportistas %}
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <h3><center>Ranking Nacional de {{deporte}}</center></h3>
+            </div>
+            <!-- /.panel-heading -->
+            <div class="panel-body">
+                <div class="dataTable_wrapper">
+                    <table class="table table-striped table-bordered table-hover" id="dataTables-example">
+                        <thead>
+                            <tr>
+                                <th>Nombre</th>
+                                <th>Fecha de nacimiento</th>
+                                <th>Lugar de nacimiento</th>
+                                <th>Ranking nacional</th>
+                                <th>Adscrito a</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        	{% for deportista in deportistas %}
+                            <tr class="info">
+                                <td class="center">{{deportista.nombre}}</td>
+                                <td class="center">{{deportista.fecha_nacim}}</td>
+                                <td class="center">{{deportista.lugar_nacimiento}}</td>
+                                {% if deportista.ranking_nacional == none %}
+                                <td class="center">Sin clasificar</td>
+                                {% else %}
+                                <td class="center">{{deportista.ranking_nacional}}</td>
+                                {% endif %}
+                                <td class="center">{{deportista.entidad.codigo}}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <!-- /.table-responsive -->
+            </div>
+            <!-- /.panel-body -->
+        </div>
+	{% endif %}
+	<script src="{% static 'bower_components/datatables/media/js/jquery.dataTables.min.js' %}"></script>
+	<script src="{% static 'bower_components/datatables-plugins/integration/bootstrap/3/dataTables.bootstrap.min.js' %}"></script>
+	<script src="{% static 'bower_components/datatables-responsive/js/dataTables.responsive.js' %}"></script>
+	<script>
+    $(document).ready(function() {
+        $('#dataTables-example').DataTable({
+                responsive: true
+        });
+    });
+    </script>
+    
+{% endblock %}
