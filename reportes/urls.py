@@ -10,4 +10,5 @@ urlpatterns =  patterns ('',
 	url(r'^ranking-nacional$', ReporteRankingNacionalDeporte.as_view(), name='ranking_nacional'),
 	url(r'^deportistas-entidad$', ReporteDeportistasEntidad.as_view(), name='deportistas_entidad'),
 	url(r'^deportistas-genero$', ReporteDeportistasGenero.as_view(), name='deportistas_genero'),
+	url(r'^deportistas-entidad-numero$', ReporteDeportistasEntidad.as_view(), name='deportistas_entidad_numero'),
 )
