@@ -1,0 +1,173 @@
+{% extends "startbootstrap/pages/index.html" %}
+{% load staticfiles %}
+{% block title %}
+Editar entidad {{id_entidad}}
+{% endblock %}
+
+{% block title_content %}
+	Editar Deportista
+{% endblock %}
+
+{% block content %}
+
+	<div class="panel panel-default">
+		<div class="panel-heading">
+			<i class="fa fa-hacker-news fa-fw"> </i>
+			Deportista {{deportista.nombre}}		
+		</div>
+		<div class="panel-body">
+			<form role="form" method="POST">
+				{% csrf_token %}
+				<div class="form-group">
+					<label for="disabledSelect">
+						Número de documento
+					</label>
+					<input class="form-control" id="disabledInput" value="{{deportista.doc_identidad}}" disabled="" type="text">
+				</div>
+				<div class="form-group">
+					{% if vacio_nombre %}
+					<div class="alert alert-danger alert-dismissable">
+						<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+						{{vacio_nombre}}
+					</div>
+					{% endif %}
+					<label>
+						Nombre
+					</label>
+					<input class="form-control" id="id_nombre" value="{{deportista.nombre}}" name="nombre" type="text">
+				</div>
+				<div class="form-group">
+					<label>
+						Género
+					</label>
+					<select class="form-control" id="id_genero" name="genero">
+					{% for genero in listado_gen %}
+						{% if genero == deportista.genero %}
+						<option value="{{deportista.genero}}" selected>{{deportista.get_genero}}</option>
+						{% else %}
+						<option value="{{genero.0}}">{{genero.1}}</option>
+						{% endif %}
+					{% endfor %}
+					</select>
+				</div>
+				<div class="form-group">
+					<label>
+						Tipo de documento
+					</label>
+					<select class="form-control" id="id_tipo_doc" name="tipo_doc">
+					{% for tipo in listado_doc %}
+						{% if tipo.0 == deportista.tipo_documento %}
+						<option value="{{deportista.tipo_documento}}" selected>{{deportista.get_tipo_documento}}</option>
+						{% else %}
+						<option value="{{tipo.0}}">{{tipo.1}}</option>
+						{% endif %}
+					{% endfor %}
+					</select>
+				</div>
+				<div class="form-group">
+					<label>
+						Departamento
+					</label>
+					<select id="id_type" class="form-control" name="type" onchange="get_municipios()">
+					{% for departamento in departamentos %}
+						{% if departamento.departamento == deportista.lugar_nacimiento.departamento %}
+						<option value="{{departamento.departamento}}" selected>{{departamento.departamento}}</option>
+						{% else %}
+						<option value="{{departamento.departamento}}">{{departamento.departamento}}</option>
+						{% endif %}
+					{% endfor %}
+					</select>
+				</div>
+				<div class="form-group">
+					<label>
+						Municipio
+					</label>
+					<select id="id_municipio" class="form-control" name="municipio">
+					{% for municipio in municipios %}
+						{% if municipio.municipio == deportista.ubicacion.municipio %}
+						<option value="{{municipio.municipio}}" selected>{{municipio.municipio}}</option>
+						{% else %}
+						<option value="{{municipio.municipio}}">{{municipio.municipio}}</option>
+						{% endif %}
+					{% endfor %}
+					</select>
+				</div>
+				<div class="form-group">
+					<label>
+						Deporte practicado
+					</label>
+					<select class="form-control" id="id_deporte" name="deporte">
+					{% for deporte in listado_deporte %}
+						{% if deporte == deportista.deporte_practicado %}
+						<option value="{{deporte.codigo}}" selected>{{deporte}}</option>
+						{% else %}
+						<option value="{{deporte.codigo}}">{{deporte}}</option>
+						{% endif %}
+					{% endfor %}
+					</select>
+				</div>
+				<div class="form-group">
+					<label>
+						Categoría
+					</label>
+					<select class="form-control" id="id_categoria" name="categoria">
+					{% for categoria in listado_categoria %}
+						{% if categoria.0 == deportista.categoria %}
+						<option value="{{deportista.categoria}}" selected>{{deportista.get_categoria}}</option>
+						{% else %}
+						<option value="{{categoria.0}}">{{categoria.1}}</option>
+						{% endif %}
+					{% endfor %}
+					</select>
+				</div>
+				<div class="form-group">
+					{% if vacio_nacional %}
+					<div class="alert alert-danger alert-dismissable">
+						<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+						{{vacio_nacional}}
+					</div>
+					{% endif %}
+					<label>
+						Ranking nacional
+					</label>
+					<input class="form-control" id="id_ranking_nacional" value="{{deportista.ranking_nacional}}" name="ranking_nacional" type="text">
+				</div>
+				<div class="form-group">
+					{% if vacio_internacional %}
+					<div class="alert alert-danger alert-dismissable">
+						<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+						{{vacio_internacional}}
+					</div>
+					{% endif %}
+					<label>
+						Ranking internacional
+					</label>
+					<input class="form-control" id="id_ranking_internacional" value="{{deportista.ranking_internacional}}" name="ranking_internacional" type="text">
+				</div>
+				<div class="form-group">
+					<label>
+						Tipo de asociación
+					</label>
+					<select class="form-control" id="id_asociacion" name="asociacion">
+					{% for asociacion in listado_asociacion %}
+						{% if asociacion.0 == deportista.tipo_asociado %}
+						<option value="{{deportista.asociacion}}" selected>{{deportista.get_tipo_asociado}}</option>
+						{% else %}
+						<option value="{{asociacion.0}}">{{asociacion.1}}</option>
+						{% endif %}
+					{% endfor %}
+					</select>
+				</div>							
+				<button type="submit" class="btn btn-primary btn-lg btn-block">Actualizar datos del deportista</button>
+			</form>
+		</div>
+	</div>
+{% endblock %}
+
+{% block graphics_js %}
+	<script type="text/javascript" src="{% static 'js/prototype.js' %}"></script>
+	<script type="text/javascript" src="{% static 'js/ubicaciones.js' %}"></script>
+	<!--<link href="{% static 'dist/css/datetimepicker.css' %}" type="text/css" media="all" rel="stylesheet">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+	<script type="text/javascript" src="{% static 'js/bootstrap-datetimepicker.js' %}"></script>-->
+{% endblock %}

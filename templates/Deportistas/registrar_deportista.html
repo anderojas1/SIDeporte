@@ -21,13 +21,29 @@
 			Registro de deportista		
 		</div>
 		<div class="panel-body">
+			{% if exito_deportista %}
+			<div class="alert alert-success">
+				{{exito_deportista_nombre}}{{exito_deportista}}
+			</div>
+			{% else %}
 			<form role="form" method="POST">
 				{% csrf_token %}
+				{% if error %}
+				<div class="alert alert-danger">
+					{{error}}
+				</div>
+				{% endif %}
 				<div class="form-group">
 					<label>
 						Nombre del deportista
 					</label>
 					{{form.nombre}}
+				</div>
+				<div class="form-group">
+					<label>
+						Género
+					</label>
+					{{form.genero}}
 				</div>
 				<div class="form-group">
 					<label>
@@ -46,9 +62,40 @@
 						Fecha de nacimiento
 					</label>
 					{{form.fecha_nacim}}
-				</div>
+				</div><div class="form-group">
+					<label>
+						Lugar de Nacimiento
+					</label>
+					{{form.lugar_nacimiento}}
+				</div><div class="form-group">
+					<label>
+						Deporte Practicado
+					</label>
+					{{form.deporte_practicado}}
+				</div><div class="form-group">
+					<label>
+						Categoria
+					</label>
+					{{form.categoria}}
+				</div><div class="form-group">
+					<label>
+						Ranking Nacional
+					</label>
+					{{form.ranking_nacional}}
+				</div><div class="form-group">
+					<label>
+						Ranking Internacional
+					</label>
+					{{form.ranking_internacional}}
+				</div><div class="form-group">
+					<label>
+						Tipo de asociación
+					</label>
+					{{form.tipo_asociado}}
+				</div>							
+				<button type="submit" class="btn btn-primary btn-lg btn-block">Registrar Deportista</button>
 			</form>
+			{%endif%}
 		</div>
 	</div>
-
 {% endblock %}

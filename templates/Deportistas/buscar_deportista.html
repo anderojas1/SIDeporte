@@ -9,21 +9,69 @@ Deportistas
 {% endblock %}
 
 {% block content %}
-	
-	<div class="panel panel-primary">
-		<div class="panel-heading">
-			<i class="fa fa-hacker-news fa-fw"> </i>
-			Sección de Deportistas
-		</div>
-		<div class="panel-body">
-			{% for deportista in deportistas %}
-			<div class="panel panel-default">
-				<div class="panel-heading">
-					<i class="fa fa-angle-double-right fa-fw"></i>
-					<a href="{{deportista.get_absolute_url}}">{{deportista.nombre}}</a>
-				</div>
-			</div>
-			{% endfor %}
-		</div>
-	</div>
+		<div class="panel panel-primary">
+        <div class="panel-heading">
+            Deportistas registrados
+        </div>
+    	<!-- /.panel-heading -->
+        <div class="panel-body">
+            {% if borra_deportistas %}
+                <h2>
+                    <small>
+                        <p class="text-success">
+                            {{borra_deportistas}}
+                        </p>
+                    </small>
+                </h2>
+                <br>
+            {% endif %}
+            <div class="dataTable_wrapper">
+            	<div class="row">
+            		<div class="col-sm-12">
+                        <div class="table-responsive">
+                			<table aria-describedby="dataTables-example_info" role="grid" class="table table-striped table-bordered table-hover dataTable no-footer" id="dataTables-example">
+                        		<thead>
+                                    <tr role="row">
+                                    	<th>
+                                            Nombre
+                                    	</th>
+                                    	<th>
+                                            Número de documento
+                                        </th>
+                                        <th>
+                                            Deporte
+                                        </th>
+                                        <th>
+                                            Categoría
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                	{% for deportista in deportistas %}
+                                	<tr role="row" class="gradeA odd">
+                                        <td class="sorting_1">
+                                        	<a href="{{deportista.get_absolute_url}}">
+                                        		{{deportista.nombre}}
+                                        	</a>
+                                        <td>
+                                        	{{deportista.doc_identidad}}
+                                        </td>
+                                        <td>
+                                            {{deportista.deporte_practicado}}
+                                        </td>
+                                        <td>
+                                            {{deportista.categoria}}
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+        	</div>
+        </div>
+            <!-- /.table-responsive -->
+                <!-- /.panel-body -->
+    </div>
 {% endblock %}
