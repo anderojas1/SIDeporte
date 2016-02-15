@@ -235,11 +235,11 @@ class ReporteDeportistasGenero(TemplateView):
     return context
 
 
-class ReporteDeportistasEntidad(TemplateView):
+class ReporteNumeroDeportistasEntidad(TemplateView):
   template_name = 'reportes/deportistas_entidad_num.html'
 
   def get_context_data(self, **kwargs):
-    context = super(ReporteDeportistasEntidad, self).get_context_data(**kwargs)
+    context = super(ReporteNumeroDeportistasEntidad, self).get_context_data(**kwargs)
 
     ver_grupo = InformacionUsuario()
     grupo = ver_grupo.asignarGrupo(self.request.user)
@@ -250,8 +250,9 @@ class ReporteDeportistasEntidad(TemplateView):
 
     for entidad in entidades:
       numero = len(Deportistas.objects.filter(entidad=entidad))
-      entidad_numero = (entidad.codigo, numero)
-      depor_entidad.append(entidad_numero)
+      if numero > 0:
+        entidad_numero = (entidad.codigo, numero)
+        depor_entidad.append(entidad_numero)
 
     context['depor_entidad'] = depor_entidad
 
