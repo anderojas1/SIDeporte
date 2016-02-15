@@ -1,0 +1,127 @@
+{% extends "startbootstrap/pages/index.html" %}
+{% load staticfiles %}
+{% block title %}
+    Entidades
+{% endblock %}
+
+{% block graphics_js %}
+	<script type="text/javascript" src="{% static 'js/prototype.js' %}"></script>
+	<script type="text/javascript" src="{% static 'js/ubicaciones.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/geolocalizacion.js' %}"></script>
+    <style>
+      #map-canvas {
+        height: 400px;
+        width: 100%;
+        margin: 10px;
+        padding: 10px;
+      }
+    </style>
+    <script src="https://maps.googleapis.com/maps/api/js?v=3.exp"></script>
+    <div>
+
+    <script>
+    
+      window.onload = function initialize() {
+        var direcciones = [];
+        {%for escenario in escenarios%} 
+        var direccion = ["{{escenario.nombre}}","{{escenario.direccion}},"+"{{municipio}}"+",{{departamento}}"+",COLOMBIA"];
+        
+        direcciones.push(direccion)
+        {%endfor%}
+
+        geoposicionarVarios(direcciones);
+        
+        google.maps.event.addDomListener(window, 'load', initialize);
+        
+      }
+
+    </script> 
+
+
+{% endblock %}
+
+{% block content %}
+{% if get%}
+<div class="panel panel-default">
+	<div class="panel-heading">
+		Reporte escenarios georeferenciados 		
+	</div>
+	<div class="panel-body">
+		<form role = "form" method = "POST"> 
+		{% csrf_token %}
+			<div class="form-group">
+				<label>
+					Departamento
+				</label>
+					{{form_ubicacion.type}}
+			</div>
+			<div class="form-group">
+				<label>
+					Municipio
+				</label>
+					{{form_ubicacion.municipio}}
+			</div>
+			<button type="submit"  class="btn btn-primary btn-lg btn-block"> Buscar </button>
+		</form>
+	</div>
+
+</div>
+
+{% elif vacio%}
+<div class="alert alert-danger alert-dismissable">
+        <button type="button" class="close" data-dismiss="alert" aria-hidden="true" onClick="location.href='georeferenciacion_escenarios'">×</button>
+         {{vacio}}
+</div>
+{% elif post %}
+
+<div class="panel panel-primary">
+            <div class="panel-heading">
+                <h3><center>Entidades del departamento {{departamento}}, municipio {{municipio}}</center></h3>
+            </div>
+            <!-- /.panel-heading -->
+            <div class="panel-body">
+                <div class="dataTable_wrapper">
+                    <table class="table table-striped table-bordered table-hover" id="dataTables-example">
+                        <thead>
+                            <tr>
+                                <th>Nombre</th>
+                                <th>Direccion</th>
+                                <th>Municipio</th>
+                                <th>Departamento</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for escenario in escenarios %}
+                            <tr class="info">
+                                <td class="center">{{escenario.nombre}}</td>
+                                <td class="center">{{escenario.direccion}}</td>
+                                <td class="center">{{municipio}}</td>
+                                <td class="center">{{departamento}}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <!-- /.table-responsive -->
+            </div>
+            <!-- /.panel-body -->
+</div>
+<div class="panel panel-default">
+        <div class="panel-heading">
+            Escenarios del departamento {{departamento}}, municipio {{municipio}}
+        </div>
+        <div class="panel-body">
+            <div id="map-canvas">
+                
+            </div>
+        </div>
+        <div>
+        <button type="button" class="btn btn-primary btn-lg btn-block" onClick="location.href='georeferenciacion_escenarios'" > Atras</button>
+        </div>
+    </div>
+{% endif %}
+
+{% endblock %}
+
+
+	

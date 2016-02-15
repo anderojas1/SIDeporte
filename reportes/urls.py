@@ -11,4 +11,6 @@ urlpatterns =  patterns ('',
 	url(r'^deportistas-entidad$', ReporteDeportistasEntidad.as_view(), name='deportistas_entidad'),
 	url(r'^deportistas-genero$', ReporteDeportistasGenero.as_view(), name='deportistas_genero'),
 	url(r'^deportistas-entidad-numero$', ReporteNumeroDeportistasEntidad.as_view(), name='deportistas_entidad_numero'),
+	url(r'^graficos/georeferenciacion_escenarios$', Georeferenciacion_escenarios.as_view(), name='georeferenciacion_escenarios'),
+	url(r'^graficos/georeferenciacion_entidades$', Georeferenciacion_entidades.as_view(), name='georeferenciacion_entidades'),
 )

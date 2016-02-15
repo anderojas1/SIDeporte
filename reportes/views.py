@@ -12,6 +12,7 @@ from reportlab.lib.enums import TA_CENTER
 from django.contrib.auth.models import User
 from Coldeportes.models import *
 from Coldeportes.grupos import InformacionUsuario
+from Coldeportes.forms import *
 
 
 class PDFReport:
@@ -257,3 +258,70 @@ class ReporteNumeroDeportistasEntidad(TemplateView):
     context['depor_entidad'] = depor_entidad
 
     return context
+
+class Georeferenciacion_escenarios(TemplateView):
+    template_name = 'reportes/georeferenciacion_escenarios.html'
+    form_ubicacion = FormRegistroUbicacion()
+
+    def get_context_data(self, **kwargs):
+      context = super (Georeferenciacion_escenarios, self).get_context_data(**kwargs)
+      
+      context['form_ubicacion'] = self.form_ubicacion
+      context['post'] = 'post'
+      context['get'] = 'get'
+      
+      return context
+
+    def post(self, request, *args, **kwargs):
+      context = super(Georeferenciacion_escenarios, self).get_context_data(**kwargs)
+      
+      municipio = request.POST['municipio']
+      departamento = request.POST['type']
+      
+      context['departamento'] = departamento
+      context['municipio'] = municipio
+      
+      ubicacion = Ubicacion.objects.get(departamento=departamento, municipio=municipio)
+      escenarios = Escenarios.objects.filter(ubicacion = ubicacion)
+
+      if len(escenarios) > 0:
+          context['post'] = 'post'
+          context['escenarios'] = escenarios
+      else:
+          context['vacio'] = 'No hay escenarios en el departamento '+ departamento + ", Municipio " + municipio
+            
+      return render(request, self.template_name, context)
+
+class Georeferenciacion_entidades(TemplateView):
+    template_name = 'reportes/georeferenciacion_entidades.html'
+    form_ubicacion = FormRegistroUbicacion()
+
+    def get_context_data(self, **kwargs):
+      context = super (Georeferenciacion_entidades, self).get_context_data(**kwargs)
+      
+      context['form_ubicacion'] = self.form_ubicacion
+      context['post'] = 'post'
+      context['get'] = 'get'
+      
+      return context
+
+    def post(self, request, *args, **kwargs):
+      context = super(Georeferenciacion_entidades, self).get_context_data(**kwargs)
+      
+      context['post'] = 'post'
+      municipio = request.POST['municipio']
+      departamento = request.POST['type']
+      
+      context['departamento'] = departamento
+      context['municipio'] = municipio
+      
+      ubicacion = Ubicacion.objects.get(departamento=departamento, municipio=municipio)
+      entidades = Entidad.objects.filter(ubicacion = ubicacion)
+     
+      if len(entidades) > 0:
+          context['post'] = 'post'
+          context['entidades'] = entidades
+      else:
+          context['vacio'] = 'No hay entidades en el departamento '+ departamento + ", Municipio " + municipio
+      
+      return render(request, self.template_name, context)

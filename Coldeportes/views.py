@@ -10,8 +10,8 @@ from io import BytesIO
 from .models import Entidad, Deportistas, Ubicacion, Dedicacion, DedicacionEntidad, Actividades
 from .forms import *
 from .grupos import InformacionUsuario
-from .match_ubicacion import *
-from .validacion_campos_vacios import *
+#from .match_ubicacion import *
+#from .validacion_campos_vacios import *
 
 
 # VER LOS DETALLES DE UNA ENTIDAD
