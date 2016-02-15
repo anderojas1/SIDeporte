@@ -279,9 +279,24 @@ class DetallesDeportistas(TemplateView):
 	def get_context_data(self, **kwargs):
 		context = super(DetallesDeportistas, self).get_context_data(**kwargs)
 		
-		self.deportista = Deportistas.objects.get(doc_identidad = kwargs['id_deportista'])
-		if 'deportistas' not in context:
-			context['deportistas'] = self.deportista
+		deportista = Deportistas.objects.get(doc_identidad = kwargs['id_deportista'])
+		context['deportista'] = deportista
+		
+		ver_grupo = InformacionUsuario()
+		grupo = ver_grupo.asignarGrupo(self.request.user)
+		context[grupo] = grupo
+		
+		entidad_consulta = Entidad.objects.get(usuario=self.request.user)
+		
+		if deportista.entidad == entidad_consulta:
+			context['puede_editar'] = True
+			
+		current_url = self.request.resolver_match.url_name
+		print(current_url)
+
+		if 'editado_depor' in current_url:
+			context['editado_depor'] = 'Se han actualizado exitosamente los datos del deportista: ' + deportista.nombre
+
 		return context
 
 class BuscarEntidades(TemplateView):
@@ -322,6 +337,7 @@ class BuscarEntidades(TemplateView):
 		else:
 			return render(request, self.template_name, context)"""
 
+"""Editado Leydi - Revisar """
 class BorrarDeportistas(TemplateView):
 	template_name = 'Deportistas/borrar_deportista.html'
 
@@ -330,6 +346,11 @@ class BorrarDeportistas(TemplateView):
 
 		deportistas = Deportistas.objects.get(doc_identidad=kwargs['id_deportista'])
 		context['deportistas'] = deportistas
+		
+		ver_grupo = InformacionUsuario()
+		grupo = ver_grupo.asignarGrupo(self.request.user)
+		context[grupo] = grupo
+		
 		return context
 
 	def post(self, request, *args, **kwargs):
@@ -340,7 +361,7 @@ class BorrarDeportistas(TemplateView):
 		deportistas.save(update_fields=['estado'])
 		context['borra_deportistas'] = 'Se ha borrado al deportista exitosamente'
 
-		return render(request, 'coldeportes/deportistas/buscar_deportista.html', context)
+		return render(request, 'Deportistas/buscar_deportista.html', context)
 
 
 class BuscarDeportistas(TemplateView):
@@ -353,13 +374,17 @@ class BuscarDeportistas(TemplateView):
 		ver_grupo = InformacionUsuario()
 		grupo = ver_grupo.asignarGrupo(self.request.user)
 		context[grupo] = grupo
-
-		self.deportistas = Deportistas.objects.filter(estado=True)
-		context['deportistas'] = self.deportistas
-		print (self.deportistas)
+		
+		if grupo == 'coldeportes':
+			pass
+		else:
+			entidad = Entidad.objects.get(usuario=self.request.user)
+			deportistas = Deportistas.objects.filter(entidad=entidad)
+			context['deportistas'] = deportistas
 
 		return context
 
+""" Nuevo Leydi - Revisar """
 class RegistrarDeportista(TemplateView):
 	template_name = 'Deportistas/registrar_deportista.html'
 	form_deportista = FormRegistroDeportista()
@@ -376,6 +401,192 @@ class RegistrarDeportista(TemplateView):
 		context['form_ubicacion'] = self.form_ubicacion
 
 		return context
+		
+	def post(self, request, *args, **kwargs):
+		context = super(RegistrarDeportista, self).get_context_data(**kwargs)
+		
+		ver_grupo = InformacionUsuario()
+		grupo = ver_grupo.asignarGrupo(self.request.user)
+		context[grupo] = grupo
+		
+		self.form_deportista = FormRegistroDeportista(request.POST)
+		print(request.POST)
+		if self.form_deportista.is_valid():
+			if grupo == 'coldeportes':
+					pass
+			else:
+				entidad = Entidad.objects.get(usuario=self.request.user)
+				nombre = request.POST['nombre']
+				genero = request.POST['genero']
+				tipo_documento = request.POST['tipo_documento']
+				doc_identidad = request.POST['doc_identidad']
+				fecha_nacim = request.POST['fecha_nacim']
+				lugar_nacim = Ubicacion.objects.get(codigo = request.POST['lugar_nacimiento'])
+				deporte_practicado = Actividades.objects.get(codigo = request.POST['deporte_practicado'])
+				categoria = request.POST['categoria']
+				ranking_nacional = request.POST['ranking_nacional']
+				ranking_internacional = request.POST['ranking_internacional']
+				tipo_asociado = request.POST['tipo_asociado']
+				
+				deportista = Deportistas(nombre=nombre,tipo_documento=tipo_documento,doc_identidad=doc_identidad,
+				genero=genero,fecha_nacim=fecha_nacim,lugar_nacimiento=lugar_nacim,deporte_practicado=deporte_practicado,
+				categoria=categoria,ranking_nacional=ranking_nacional,ranking_internacional=ranking_internacional,
+				tipo_asociado=tipo_asociado,entidad=entidad)
+				
+				deportista.save()
+				
+				context['exito_deportista_nombre'] = 'El deportista ' + nombre
+				context['exito_deportista'] = ' ha sido registrado exitosamente'
+				
+				return render (request, self.template_name, context)
+		# SI EL FORMULARIO NO ESTÁ COMPLETO
+		else:
+
+			# CARGAR NUEVAMENTE LOS FORMULARIOS
+			self.form_deportista = FormRegistroDeportista()
+			
+			context['form'] = self.form_deportista
+
+
+			# CARGAR INFORMACIÓN DEL ERROR
+			context['error'] = 'Todos los campos son requeridos'
+
+
+			return render(request, self.template_name, context)
+
+""" Nuevo Leydi - Revisar """		
+class EditarDeportista(TemplateView):
+	template_name = 'Deportistas/editar_deportista.html'
+	def cargar_datos(self, context,deportista):
+	
+		# CARGAR DEPARTAMENTOS
+		departamentos = Ubicacion.objects.all().distinct('departamento').values('departamento')
+		context['departamentos'] = departamentos
+
+		# CARGAR MUNICIPIOS
+		municipios = Ubicacion.objects.filter(departamento = deportista.lugar_nacimiento.departamento).values('municipio')	
+		context['municipios'] = municipios
+		print(municipios)
+
+		listado_doc = ((0, 'Cédula de ciudadanía'), 
+						(1, 'Registro civil'),
+						(2,'Tarjeta de identidad'),
+						(3, 'Cédula de extranjería'))
+		context['listado_doc'] = listado_doc
+		
+		listado_gen =((0, 'Masculino'),
+						(1, 'Femenino'),
+						(2, 'Otro'))
+		context['listado_gen'] = listado_gen
+
+		listado_deporte = Actividades.objects.filter(tipo_actividad = 1).order_by('actividad')
+
+
+		context['listado_deporte'] = listado_deporte
+		listado_categoria = ((0, 'Infantil'),
+						(1, 'Pre-Juvenil'),
+						(2, 'Juvenil'),
+						(3, 'Mayores'),
+						(4, 'Alto rendimiento'))
+		context['listado_categoria'] = listado_categoria
+		
+		listado_asociacion = ((0, 'Jugador con pase'),
+							(1, 'Jugador asociado con mensualidad'),
+							(2,'Jugador asociado con anualidad'))
+		context['listado_asociacion'] = listado_asociacion
+		
+		
+	def get_context_data(self, **kwargs):
+		context = super(EditarDeportista, self).get_context_data(**kwargs)
+
+		# CARGAR INFORMACIÓN DEL DEPORTISTA
+		deportista = Deportistas.objects.get(doc_identidad=kwargs['id_deportista'])
+		context['deportista'] = deportista
+		
+		self.cargar_datos(context, deportista) 
+		
+		# CARGAR INFORMACIÓN DE USUARIO ACTUAL
+		ver_grupo = InformacionUsuario()
+		grupo = ver_grupo.asignarGrupo(self.request.user)
+		context[grupo] = grupo
+
+		return context
+	
+	def post(self, request, *args, **kwargs):
+		context = super(EditarDeportista, self).get_context_data(**kwargs)
+		
+		# CARGAR INFORMACIÓN DE USUARIO ACTUAL
+		ver_grupo = InformacionUsuario()
+		grupo = ver_grupo.asignarGrupo(self.request.user)
+		context[grupo] = grupo
+
+		# CARGAR DEPORTISTA
+		deportista = Deportistas.objects.get(doc_identidad=kwargs['id_deportista'])
+		context['deportista'] = deportista
+		
+		entidad = Entidad.objects.get(usuario=self.request.user)
+		nombre = request.POST['nombre']
+		genero = request.POST['genero']
+		tipo_documento = request.POST['tipo_doc']
+		departamento = request.POST['type']
+		municipio = request.POST['municipio']
+		deporte = request.POST['deporte']
+		categoria = request.POST['categoria']
+		ranking_nacional = request.POST['ranking_nacional']
+		ranking_internacional = request.POST['ranking_internacional']
+		tipo_asociado = request.POST['asociacion']
+				
+		if not nombre or not tipo_documento or not deporte or not categoria or not ranking_nacional or not ranking_internacional or not tipo_asociado:
+				
+				if not nombre:
+					context['vacio_nombre'] = 'El campo nombre es requerido'
+
+				"""if not tipo_documento:
+					context['vacio_doc'] = 'El campo tipo de documento es requerido'"""
+
+				if not doc_identidad:
+					context['vacio_num_doc'] = 'El campo número de documento es requerido'
+
+				"""if not deporte_practicado:
+					context['vacio_deporte'] = 'El campo deporte practicado es requerido'
+					
+				if not categoria:
+					context['vacio_categoria'] = 'El campo categoría es requerido'"""
+
+				if not ranking_nacional:
+					context['vacio_nacional'] = 'El campo ranking nacional es requerido'
+
+				if not ranking_internacional:
+					context['vacio_internacional'] = 'El campo ranking internacional es requerido'
+
+				"""if not tipo_asociado:
+					context['vacio_asociado'] = 'El campo tipo de asociación es requerido'"""
+
+
+		else:
+				ubicacion = Ubicacion.objects.get(departamento=departamento, municipio=municipio)
+				deportista.nombre = nombre
+				deportista.genero = genero
+				deportista.tipo_documento = tipo_documento
+				deportista.lugar_nacimiento = ubicacion
+				actividad = Actividades.objects.get(codigo=deporte)
+				deportista.deporte_practicado = actividad
+				deportista.categoria = categoria
+				deportista.ranking_nacional = ranking_nacional
+				deportista.ranking_internacional = ranking_internacional
+				deportista.tipo_asociado = tipo_asociado
+				
+			
+				deportista.save(update_fields=['nombre', 'genero','tipo_documento',
+					'lugar_nacimiento', 'deporte_practicado', 'categoria','ranking_nacional','ranking_internacional','tipo_asociado'])
+
+				context['edit_depor'] = 'Se han actualizado exitosamente los datos del deportista: ' + deportista.nombre
+
+				return redirect ("/coldeportes/deportistas/" + kwargs['id_deportista'], **kwargs)
+					
+		self.cargar_datos(context, deportista) 
+		return render(request, self.template_name, context)
+			
 
 
 class RegistrarEscenario(TemplateView):
@@ -720,3 +931,9 @@ def ajax_get_actividades(request):
 		print (actividades)
 
 	return render_to_response('escenarios/buscaractividades.html', locals())
+
+class QuienesSomos(TemplateView):
+	template_name = 'institucional/quienes-somos.html'
+
+class MisionVision(TemplateView):
+	template_name = 'institucional/mision-vision.html'

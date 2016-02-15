@@ -147,6 +147,11 @@ class Deportistas(models.Model):
 	opt_genero = ((0, 'Masculino'),
 					(1, 'Femenino'),
 					(2, 'Otro'))
+
+	opt_tipo_asociado = ((0, 'Jugador con pase'), 
+		(1, 'Jugador asociado con mensualidad'),
+		(2,'Jugador asociado con anualidad'))
+
 	nombre 					= models.CharField(max_length=30)
 	tipo_documento			= models.SmallIntegerField(choices=opt_tipo_documento, null=True)
 	doc_identidad 			= models.BigIntegerField(primary_key=True)
@@ -158,10 +163,48 @@ class Deportistas(models.Model):
 	estado 					= models.BooleanField(default=True)
 	ranking_nacional		= models.IntegerField(null=True)
 	ranking_internacional	= models.IntegerField(null=True)
-	opt_tipo_asociado		= ((0, 'Jugador con pase'), (1, 'Jugador asociado con mensualidad'),(2,'Jugador asociado con anualidad'))
+	
 	tipo_asociado 			= models.SmallIntegerField(choices=opt_tipo_asociado)
 	# reconocimiento			= models.CharField(max_length=0) ---> Esto es multivaluado
 	entidad 				= models.ForeignKey(Entidad, null=True)
+	
+	def get_genero(self):
+		if self.genero == 0 :
+			return 'Masculino'
+		elif self.genero == 1:
+			return 'Femenino'
+		else:
+			return 'Otro'
+
+	def get_tipo_documento(self):
+		if self.tipo_documento == 0 :
+			return 'Cédula de ciudadanía'
+		elif self.tipo_documento == 1:
+			return 'Registro civil'
+		elif self.tipo_documento == 2:
+			return 'Tarjeta de identidad'
+		else:
+			return 'Cédula de extranjería'
+
+	def get_categoria(self):
+		if self.categoria == 0 :
+			return 'Infantil'
+		elif self.categoria == 1:
+			return 'Pre-Juvenil'
+		elif self.categoria == 2:
+			return 'Juvenil'
+		elif self.categoria == 3:
+			return 'Mayores'
+		else:			
+			return 'Alto rendimiento'
+
+	def get_tipo_asociado(self):
+		if self.tipo_asociado == 0:
+			return 'Jugador con pase'
+		if self.tipo_asociado == 1:
+			return 'Jugador asociado con mensualidad'
+		if self.tipo_asociado == 2:
+			return 'Jugador asociado con anualidad'
 
 	def __str__(self):
 		return self.nombre

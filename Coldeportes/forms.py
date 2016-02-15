@@ -121,13 +121,16 @@ class FormRegistroDeportista(ModelForm):
 						(29, 'Waterpolo'),
 						)
 
-		fields = ['nombre', 'tipo_documento', 'doc_identidad', 'fecha_nacim', 'deporte_practicado', 'categoria','tipo_asociado']
+		fields = ['nombre', 'genero','tipo_documento', 'doc_identidad', 'fecha_nacim','lugar_nacimiento', 'deporte_practicado', 'categoria','ranking_nacional','ranking_internacional','tipo_asociado']
 
 		widgets = {
 			'nombre': forms.TextInput(attrs={
 				'class': 'form-control',
 				'placeholder': 'Nombre completo',
 				'type': 'text'
+				}),
+			'genero': forms.Select(attrs={
+				'class': 'form-control'
 				}),
 			'tipo_documento': forms.Select(attrs={
 				'class': 'form-control'
@@ -143,6 +146,10 @@ class FormRegistroDeportista(ModelForm):
 					'format': 'yyyy-mm-dd',
 					'picktime': 'false'
 				}),
+			'lugar_nacimiento':forms.TextInput(attrs={
+				'class': 'form-control',
+				'placeholder': 'Lugar de nacimiento'
+				}),
 			'deporte_practicado': forms.Select(choices=opt_deporte, attrs={
 				'class': 'form-control',
 				}),
@@ -151,8 +158,15 @@ class FormRegistroDeportista(ModelForm):
 				}),
 			'categoria': forms.Select(attrs={
 				'class': 'form-control'
+				}),
+			'ranking_nacional': forms.NumberInput(attrs={
+				'class': 'form-control',
+				'placeholder': 'Ranking nacional',
+				}),
+			'ranking_internacional': forms.NumberInput(attrs={
+				'class': 'form-control',
+				'placeholder': 'Ranking internacional',
 				})
-
 		}
 
 class FormRegistrarEscenario(ModelForm):

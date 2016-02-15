@@ -10,18 +10,145 @@
 {% block content %}
 
 	<div class="panel panel-default">
+		<div class="panel-heading">
+			<h2>
+				<p class="text-primary">
+					<strong>{{deportista.nombre}}</strong>
+				</p>	
+			</h2>
+		</div>
 		<div class="panel-body">
-			Documento de Identidad: {{deportistas.doc_identidad}}<br>
-			Lugar de nacimiento: {{deportistas.lugar_nacim}}<br>
-			Fecha de nacimiento: {{deportistas.fecha_nacim}}<br>
-			Deporte que practica: {{deportistas.deporte}}<br>
-			Categoria del deportista: {{deportistas.categoria}}<br>
-			Ranking Nacional: {{deportistas.ranking_nacional}}<br>
-			Ranking Internacional: {{deportistas.ranking_internacional}}<br>
-			Entidad a la que esta asociado: {{deportistas.asociado_a}}<br>
-			Tipo de asociación con la entidad: {{deportistas.tipo_asociado}}<br>
-			Reconocimientos: {{deportistas.reconocimiento}}<br>
-			<a href="delete"><button class="btn btn-danger">Eliminar</button></a>
+			{% if editado_depor %}
+                <h2>
+                    <small>
+                        <p class="text-success">
+                            {{editado_depor}}
+                        </p>
+                    </small>
+                </h2>
+                <br>
+            {% endif %}
+			<div class="dataTable_wrapper">
+            	<div class="row">
+            		<div class="col-sm-12">
+            			<table aria-describedby="dataTables-example_info" role="grid" class="table table-striped table-bordered table-hover dataTable no-footer" id="dataTables-example">
+                            <tbody>
+                            	<tr>
+                                    <td>
+                                    	<strong>Nombre</strong>
+                                    </td>
+                                    <td>
+                                    	{{deportista.nombre}}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                    	<strong>Género</strong>
+                                    </td>
+                                    <td>
+                                    	{{deportista.get_genero}}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                    	<strong>Tipo de documento</strong>
+                                    </td>
+                                    <td>
+                                    	{{deportista.get_tipo_documento}}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <strong>Número de documento</strong>
+                                    </td>
+                                    <td>
+                                        {{deportista.doc_identidad}}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <strong>Fecha de nacimiento</strong>
+                                    </td>
+                                    <td>
+                                        {{deportista.fecha_nacim}}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <strong>Lugar de nacimiento</strong>
+                                    </td>
+                                    <td>
+                                        {{deportista.lugar_nacimiento}}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <strong>Deporte que practica</strong>
+                                    </td>
+                                    <td>
+                                        {{deportista.deporte_practicado}}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                    	<strong>Categoría del deportista</strong>
+                                    </td>
+                                    <td>
+                                    	{{deportista.get_categoria}} 
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                    	<strong>Ranking nacional</strong>
+                                    </td>
+                                    <td>
+                                    	{{deportista.ranking_nacional}} 
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                    	<strong>Ranking internacional</strong>
+                                    </td>
+                                    <td>
+                                    	{{deportista.ranking_internacional}} 
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                    	<strong>Tipo de asociación</strong>
+                                    </td>
+                                    <td>
+                                    	{{deportista.get_tipo_asociado}} 
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                    	<strong>Entidad responsable a cargo</strong>
+                                    </td>
+                                    <td>
+                                    	{{deportista.entidad.nombre}} ({{deportista.entidad.codigo}})
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+        	</div>
+			{% if coldeportes or puede_editar %}
+			<div class="row">
+				<div class="col-sm-6">
+					<a href="update">
+						<button type="button" class="btn btn-warning btn-lg btn-block">Editar</button>
+					</a>				
+				</div>
+				<div class="col-sm-6">
+					<a href="delete">	
+						<button type="button" class="btn btn-danger btn-lg btn-block">Borrar</button>
+					</a>					
+				</div>				
+			</div>
+			{% endif %}
 		</div>
 	</div>
+	
 {% endblock %}
