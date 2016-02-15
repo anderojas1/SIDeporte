@@ -9,3 +9,15 @@ function get_municipios(){
     }
     }); // end new Ajax.Request
 }
+
+function get_actividades(){
+	new Ajax.Request('/coldeportes/buscaractividades', {
+	method: 'POST',
+    parameters: $H({'dedicacion':$('id_dedicacion').getValue()}),
+    onSuccess: function(transport) {
+        var e = $('actividad_id')
+        if(transport.responseText)
+            e.update(transport.responseText)
+    }
+    });
+}
