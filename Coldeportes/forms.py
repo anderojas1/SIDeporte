@@ -160,7 +160,7 @@ class FormRegistrarEscenario(ModelForm):
 	class Meta:
 
 		model = Escenarios
-		fields = ['nombre', 'direccion', 'actividad', 'capacidad_publico', 'capacidad_deportistas', 'escala', 'descripcion']
+		fields = ['nombre', 'direccion', 'capacidad_publico', 'capacidad_deportistas', 'escala', 'descripcion']
 
 		opt_escala = ((0, 0), (1, 1), (2, 2), (3, 3), (4, 4), (5, 5), (6, 6), (7, 7), (8, 8), (9, 9), (10, 10))
 
@@ -173,11 +173,6 @@ class FormRegistrarEscenario(ModelForm):
 			'direccion': forms.TextInput(attrs={
 				'class': 'form-control',
 				'placeholder': 'Dirección',
-				'type': 'text'
-				}),
-			'actividad': forms.TextInput(attrs={
-				'class': 'form-control',
-				'placeholder': 'Actividad o deporte practicado',
 				'type': 'text'
 				}),
 			'capacidad_publico': forms.NumberInput(attrs={
@@ -198,3 +193,14 @@ class FormRegistrarEscenario(ModelForm):
 				'type': 'text'
 				}),
 		}
+
+class FormActividadDedicacion(forms.Form):
+
+	dedicaciones = [('', 'Seleccione una dedicación...',)] + [(dep.id, dep.dedicacion) for dep in Dedicacion.objects.all()]
+	actividades = [('', 'Seleccione una dedicación primero')]
+
+	dedicacion = forms.ChoiceField(choices=dedicaciones, widget=forms.Select(attrs={'onchange': 'get_actividades();', 'class': 'form-control'}))
+	actividad = forms.ChoiceField(required=False,choices=actividades, widget=forms.Select(attrs={
+	'class': 'form-control',
+	'id': 'actividad_id',
+	'name': 'actividad'}))
