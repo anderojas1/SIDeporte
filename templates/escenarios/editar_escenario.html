@@ -40,6 +40,20 @@ Editar Entidad
 					<input class="form-control" id="id_nombre" value="{{escenario.nombre}}" name="nombre" type="text">
 				</div>
 				<div class="form-group">
+					<label>
+						Dedicación
+					</label>
+					<select id="id_dedicacion" class="form-control" name="dedicacion" onchange="get_actividades()">
+					{% for dedicacion in dedicaciones %}
+						{% if dedicacion == escenario.tipo %}
+						<option value="{{dedicacion.id}}" selected>{{dedicacion.dedicacion}}</option>
+						{% else %}
+						<option value="{{dedicacion.id}}">{{dedicacion.dedicacion}}</option>
+						{% endif %}
+					{% endfor %}
+					</select>
+				</div>
+				<div class="form-group">
 					{% if vacio_actividad %}
 					<div class="alert alert-danger alert-dismissable">
 						<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
@@ -49,7 +63,15 @@ Editar Entidad
 					<label>
 						Deporte o actividad practicado
 					</label>
-					<input class="form-control" id="id_actividad" value="{{escenario.actividad}}" name="actividad" type="text">
+					<select id="actividad_id" class="form-control" name="actividad">
+					{% for actividad in actividades %}
+						{% if actividad.actividad == escenario.actividad.actividad %}
+						<option value="{{actividad.codigo}}" selected>{{actividad.actividad}}</option>
+						{% else %}
+						<option value="{{actividad.codigo}}">{{actividad.actividad}}</option>
+						{% endif %}
+					{% endfor %}
+					</select>
 				</div>
 				<div class="form-group">
 					<label>
@@ -61,20 +83,6 @@ Editar Entidad
 						<option value="{{lista}}" selected>{{lista}}</option>
 						{% else %}
 						<option value="{{lista}}">{{lista}}</option>
-						{% endif %}
-					{% endfor %}
-					</select>
-				</div>
-				<div class="form-group">
-					<label>
-						Dedicación
-					</label>
-					<select id="id_dedicacion" class="form-control" name="dedicacion">
-					{% for dedicacion in dedicaciones %}
-						{% if dedicacion == escenario.tipo %}
-						<option value="{{dedicacion.id}}" selected>{{dedicacion.dedicacion}}</option>
-						{% else %}
-						<option value="{{dedicacion.id}}">{{dedicacion.dedicacion}}</option>
 						{% endif %}
 					{% endfor %}
 					</select>

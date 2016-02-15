@@ -110,7 +110,7 @@ class Escenarios(models.Model):
 	direccion				= models.CharField(max_length=50, null=True)
 	entidad 				= models.ForeignKey(Entidad)
 	tipo 					= models.OneToOneField(Dedicacion, null=True)
-	actividad				= models.ForeignKey(Actividades)
+	actividad				= models.ForeignKey(Actividades, null=True)
 	capacidad_publico		= models.BigIntegerField(default=0)
 	capacidad_deportistas	= models.IntegerField(default=0)
 	escala					= models.SmallIntegerField(default=0)
@@ -124,7 +124,7 @@ class Escenarios(models.Model):
 		if len(kwargs) == 0:
 			self.estado = True
 			nombre_sin_espacio = self.nombre.replace(' ', '')
-			actividad_sin_espacio = self.actividad.replace(' ', '')
+			actividad_sin_espacio = self.actividad.actividad.replace(' ', '')
 			self.codigo = self.entidad.codigo + nombre_sin_espacio + actividad_sin_espacio
 			return super(Escenarios, self).save(*args, **kwargs)
 		else:

@@ -45,12 +45,6 @@
 				</div>
 				<div class="form-group">
 					<label>
-						Deporte o actividad practicado
-					</label>
-					{{form.actividad}}
-				</div>
-				<div class="form-group">
-					<label>
 						Estado (Escoja de 1 a 10 de mal estado a buen estado)
 					</label>
 					{{form.escala}}
@@ -59,11 +53,13 @@
 					<label>
 						Dedicación
 					</label>
-					<select id="dedicacion_id" class="form-control" name="dedicacion">
-					{% for dedicacion in dedicaciones %}
-						<option value="{{dedicacion.id}}">{{dedicacion.dedicacion}}</option>
-					{% endfor %}
-					</select>
+					{{form_actividad.dedicacion}}
+				</div>
+				<div class="form-group">
+					<label>
+						Deporte o actividad practicado
+					</label>
+					{{form_actividad.actividad}}
 				</div>
 				<div class="form-group">
 					<label>

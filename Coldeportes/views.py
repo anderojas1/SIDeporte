@@ -7,7 +7,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.models import User, Group
 from io import BytesIO
 
-from .models import Entidad, Deportistas, Ubicacion, Dedicacion, DedicacionEntidad
+from .models import Entidad, Deportistas, Ubicacion, Dedicacion, DedicacionEntidad, Actividades
 from .forms import *
 from .grupos import InformacionUsuario
 from .match_ubicacion import *
@@ -382,6 +382,7 @@ class RegistrarEscenario(TemplateView):
 	template_name = 'escenarios/registrar_escenario.html'
 	form_escenario = FormRegistrarEscenario()
 	form_ubicacion = FormRegistroUbicacion()
+	form_actividad = FormActividadDedicacion()
 
 	def get_context_data(self, **kwargs):
 		context = super(RegistrarEscenario, self).get_context_data(**kwargs)
@@ -395,6 +396,8 @@ class RegistrarEscenario(TemplateView):
 		context['form'] = self.form_escenario
 		context['dedicaciones'] = dedicaciones
 		context['form_ubicacion'] = self.form_ubicacion
+		context['form_actividad'] = self.form_actividad
+
 
 		return context
 
@@ -410,7 +413,7 @@ class RegistrarEscenario(TemplateView):
 		municipio = request.POST['municipio']
 		departamento = request.POST['type']
 
-		if self.form_escenario.is_valid():
+		if self.form_escenario.is_valid() and len(request.POST['actividad']) > 0 and len(request.POST['dedicacion']) >0:
 			try:
 
 				# BUSCAR EN LA BD SI EL DEPARTAMENTO Y MUNICIPIO EXISTEN
@@ -426,7 +429,8 @@ class RegistrarEscenario(TemplateView):
 
 					nombre = request.POST['nombre']
 					direccion = request.POST['direccion']
-					actividad = request.POST['actividad']
+					actividad_esc = request.POST['actividad']
+					actividad = Actividades.objects.get(codigo=actividad_esc)
 					descripcion = request.POST['descripcion']
 
 					dedicacion = Dedicacion.objects.get(id=request.POST['dedicacion'])
@@ -471,6 +475,7 @@ class RegistrarEscenario(TemplateView):
 		else:
 
 			# CARGAR NUEVAMENTE LOS FORMULARIOS
+			print (self.form_escenario.errors)
 			self.form_escenario = FormRegistrarEscenario()
 			self.form_ubicacion = FormRegistroUbicacion()
 			context['form'] = self.form_escenario
@@ -566,6 +571,10 @@ class EditarEscenario(TemplateView):
 		municipios = Ubicacion.objects.filter(departamento=escenario.ubicacion.departamento).values('municipio')
 		context['municipios'] = municipios
 
+		# CARGAR ACTIVIDADES
+		actividades = Actividades.objects.filter(tipo_actividad=escenario.tipo);
+		context['actividades'] = actividades
+
 	# CARGAR INFORMACIÓN PREVIA A LA CARGA DE LA'PÁGINA
 	def get_context_data(self, **kwargs):
 		context = super(EditarEscenario, self).get_context_data(**kwargs)
@@ -609,7 +618,7 @@ class EditarEscenario(TemplateView):
 			# OBTENER TODOS LOS CAMPOS EDITABLES
 			nombre = request.POST['nombre']
 			direccion = request.POST['direccion']
-			actividad = request.POST['actividad']
+			actividad = Actividades.objects.get(codigo=request.POST['actividad'])
 			capacidad_e = request.POST['capacidad_publico']
 			descripcion = request.POST['descripcion']
 			capacidad_d = request.POST['capacidad_deportistas']
@@ -700,3 +709,14 @@ def ajax_get_municipios(request):
 		municipios = Ubicacion.objects.filter(departamento=departamento).values_list('municipio', flat=True)
 
 	return render_to_response('Entidades/buscar_municipios.html', locals())
+
+@csrf_exempt
+def ajax_get_actividades(request):
+
+	if request.is_ajax() and request.method=='POST':
+		dedicacion_esc = request.POST.get('dedicacion', '')
+		dedicacion = Dedicacion.objects.get(id=dedicacion_esc)
+		actividades = Actividades.objects.filter(tipo_actividad=dedicacion.id)
+		print (actividades)
+
+	return render_to_response('escenarios/buscaractividades.html', locals())
